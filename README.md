@@ -1,11 +1,13 @@
 # dptlab — Diffusion Post-Training Lab
 
 Post-train open-weight text-to-image diffusion models (SDXL, FLUX) with four
-recipes, evaluate them with a shared harness, and deploy the result on
-[Modal](https://modal.com). Built as a from-scratch study of the post-training
-+ deployment stack for image generation models — the same shape as modern LLM
-post-training (SFT → preference optimization → RL → distillation), applied to
-diffusion.
+recipes, evaluate them with a shared harness, and publish each checkpoint to
+the [Hugging Face Hub](https://huggingface.co) with an auto-generated model
+card. [`MODELS.md`](MODELS.md) is the running leaderboard: every pushed
+checkpoint gets a benchmarked row. Built as a from-scratch study of the
+post-training stack for image generation models — the same shape as modern
+LLM post-training (SFT → preference optimization → RL → distillation),
+applied to diffusion.
 
 ## Recipes
 
@@ -19,7 +21,8 @@ diffusion.
 Every recipe reads the same `TrainConfig` YAML shape (`configs/recipes/*.yaml`),
 goes through the same `models/registry.py` (so SDXL and FLUX are one-line
 swaps), and writes checkpoints with a `run_manifest.json` that the eval
-harness and Modal server read to know which base model + recipe produced them.
+harness and the Hub-publishing script both read to know which base model +
+recipe produced them.
 
 ### GRPO: the eval harness as the reward model
 
@@ -53,25 +56,40 @@ dptlab eval --checkpoint outputs/dpo-sdxl/final \
     --prompts prompts/geneval_mini.jsonl
 ```
 
-## Deployment
+## Publishing: Hugging Face Hub, not a hosted endpoint
+
+Rather than standing up a Modal endpoint that only works while your account
+is paying for it, every checkpoint gets pushed to the Hub as its own repo
+with LoRA weights, `run_manifest.json`, and an auto-generated model card
+(base model, recipe, hyperparameters, and — once benchmarked — the same
+numbers that land in `MODELS.md`). That's the actual deliverable: a
+`diffusers`-loadable checkpoint anyone can pull, not an endpoint only you can
+hit.
 
 ```bash
-modal deploy src/dptlab/serve/modal_app.py
+# train -> benchmark -> publish -> record
+accelerate launch scripts/train.py --config configs/recipes/dpo.yaml
+dptlab eval --checkpoint outputs/dpo-sdxl/final --baseline-model-key sdxl \
+    --prompts prompts/geneval_mini.jsonl --output-dir eval_results/dpo-sdxl
+python scripts/push_to_hub.py --checkpoint outputs/dpo-sdxl/final \
+    --repo-id OnePunchMonk/dptlab-sdxl-dpo-v1 --eval-report eval_results/dpo-sdxl/report.json
+python scripts/update_models_md.py --repo-id OnePunchMonk/dptlab-sdxl-dpo-v1 \
+    --checkpoint outputs/dpo-sdxl/final --eval-report eval_results/dpo-sdxl/report.json
 ```
 
-One Modal class (`DiffusionService`) serves any checkpoint tag (`base` /
-`lora` / `dpo` / `grpo` / `distill`) from a shared volume, swapping LoRA
-weights in place rather than cold-starting a new container per variant. The
-distilled checkpoint defaults to 4 inference steps instead of 30 — the direct
-payoff of the distillation recipe.
+See [`MODELS.md`](MODELS.md) for the leaderboard this produces and the full
+publish loop.
 
-**On "vLLM or Modal" — a scoping note.** vLLM serves LLMs (and some VLMs); it
-does not serve diffusion UNets/transformers, so there's no literal
-"vLLM-serve SDXL." What's actually in this repo: Modal GPU containers do all
-diffusion sampling, and vLLM serves an optional small LLM
-(`PromptRewriter` in `modal_app.py`) that expands terse prompts before they
-hit the diffusion model — a real, common use of an LLM inside a T2I pipeline,
-and the one place vLLM's batching genuinely fits.
+### Optional: Modal serving reference
+
+`src/dptlab/serve/modal_app.py` is kept as a reference implementation for
+anyone who *does* want a live endpoint (`modal deploy src/dptlab/serve/modal_app.py`),
+loading checkpoints straight from the Hub instead of a Modal volume. It also
+carries a scoping note worth keeping regardless of deployment target: vLLM
+serves LLMs (and some VLMs), not diffusion UNets/transformers — there's no
+literal "vLLM-serve SDXL." The one place vLLM legitimately fits a T2I
+pipeline is serving a small prompt-rewriting LLM (`PromptRewriter` in that
+file), which is what it's used for there.
 
 ## Repo layout
 
@@ -84,21 +102,24 @@ src/dptlab/
     adapters/                # T2IAdapter protocol + CheckpointAdapter
     metrics/                 # clip_score, aesthetic, winrate
     runner.py, cli.py
-  serve/modal_app.py        # Modal deployment (+ vLLM prompt rewriter)
+  serve/modal_app.py        # optional: reference Modal endpoint (+ vLLM prompt rewriter)
 configs/recipes/*.yaml       # one config per recipe
 scripts/
-  train.py                   # accelerate launch scripts/train.py --config ...
-  build_preference_pairs.py  # auto-generate DPO pairs via the eval scorers
+  train.py                    # accelerate launch scripts/train.py --config ...
+  build_preference_pairs.py   # auto-generate DPO pairs via the eval scorers
+  push_to_hub.py               # publish a checkpoint + model card to the Hub
+  update_models_md.py          # record its benchmark row in MODELS.md
 tests/
+MODELS.md                      # the leaderboard
 ```
 
 ## Status
 
 Scaffolding is in place end-to-end (config → training loop → checkpoint →
-eval → serve) for all four recipes against SDXL and FLUX. What's not done
-yet: an actual training run, real preference/concept datasets, and
-benchmark numbers in this README — next steps are running LoRA on a small
-concept dataset first to validate the pipeline, then DPO/GRPO on top.
+eval → Hub publish → `MODELS.md` row) for all four recipes against SDXL and
+FLUX. What's not done yet: an actual training run, real preference/concept
+datasets, and a filled-in `MODELS.md` — next steps are running LoRA on a
+small concept dataset first to validate the pipeline, then DPO/GRPO on top.
 
 ## License
 

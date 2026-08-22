@@ -19,6 +19,7 @@ from dptlab.training.grpo import train_grpo
 from dptlab.training.lora import train_lora
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
 
 _RECIPES = {
     "lora": train_lora,
@@ -38,7 +39,7 @@ def main() -> None:
         raise ValueError(f"Unknown recipe {config.recipe!r}. Choose from {list(_RECIPES)}.")
 
     output_dir = _RECIPES[config.recipe](config)
-    logging.info("Training complete. Checkpoint written to %s", output_dir)
+    logger.info("Training complete. Checkpoint written to %s", output_dir)
 
 
 if __name__ == "__main__":

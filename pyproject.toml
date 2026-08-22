@@ -1,7 +1,7 @@
 [project]
 name = "dptlab"
 version = "0.1.0"
-description = "Post-training and deployment lab for open-weight diffusion models (LoRA fine-tuning, Diffusion-DPO preference alignment, step-distillation) with a built-in eval harness and Modal serving."
+description = "Post-training lab for open-weight diffusion models (LoRA fine-tuning, Diffusion-DPO, GRPO, step-distillation) with a built-in eval harness and Hugging Face Hub publishing."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -16,12 +16,13 @@ dependencies = [
     "pillow>=10.0",
     "numpy>=1.26",
     "tqdm>=4.66",
+    "huggingface-hub>=0.24",
 ]
 
 [project.optional-dependencies]
 train = ["bitsandbytes>=0.43", "xformers>=0.0.27", "datasets>=2.20", "wandb>=0.17"]
 eval = ["scipy>=1.13", "torchmetrics>=1.4", "open-clip-torch>=2.26"]
-serve = ["modal>=0.64", "fastapi>=0.111"]
+serve = ["modal>=0.64", "fastapi>=0.111"]  # optional: only needed for the reference Modal serving example
 dev = ["pytest>=8.0", "ruff>=0.5", "mypy>=1.10"]
 
 [project.scripts]
