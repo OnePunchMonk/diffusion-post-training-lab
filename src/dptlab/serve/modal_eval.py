@@ -26,7 +26,7 @@ image = (
     .pip_install(
         "torch",
         "diffusers>=0.30",
-        "transformers>=4.44",
+        "transformers>=4.44,<5",
         "accelerate>=0.33",
         "peft>=0.12",
         "safetensors>=0.4",
