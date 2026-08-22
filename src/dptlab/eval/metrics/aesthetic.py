@@ -47,13 +47,25 @@ class AestheticScorer:
         from torch import nn
         from torch.hub import load_state_dict_from_url
 
-        head = nn.Sequential(
-            nn.Linear(768, 1024), nn.Dropout(0.2),
-            nn.Linear(1024, 128), nn.Dropout(0.2),
-            nn.Linear(128, 64), nn.Dropout(0.1),
-            nn.Linear(64, 16),
-            nn.Linear(16, 1),
-        )
+        # The upstream checkpoint's keys are "layers.0.weight", "layers.2.weight", ...
+        # (it was itself defined as `self.layers = nn.Sequential(...)`), not the bare
+        # "0.weight" a plain nn.Sequential produces -- so the wrapper module name has
+        # to match for load_state_dict to find anything.
+        class _MLP(nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.layers = nn.Sequential(
+                    nn.Linear(768, 1024), nn.Dropout(0.2),
+                    nn.Linear(1024, 128), nn.Dropout(0.2),
+                    nn.Linear(128, 64), nn.Dropout(0.1),
+                    nn.Linear(64, 16),
+                    nn.Linear(16, 1),
+                )
+
+            def forward(self, x):
+                return self.layers(x)
+
+        head = _MLP()
         state_dict = load_state_dict_from_url(_HEAD_URL, map_location=self._device)
         head.load_state_dict(state_dict)
         return head.to(self._device).eval()

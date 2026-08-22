@@ -7,12 +7,23 @@ resolution: 1024
 learning_rate: 1.0e-4
 train_batch_size: 1
 gradient_accumulation_steps: 4
-max_train_steps: 1500
+max_train_steps: 20
 lora_rank: 16
 lora_alpha: 16
 mixed_precision: bf16
 seed: 42
-checkpointing_steps: 250
+checkpointing_steps: 20
+
+# Modal's detach handoff through the MCP tool only reliably survives calls
+# that finish in well under 120s (see MODELS.md / session notes) -- past
+# that the tool call gets backgrounded and the underlying job is liable to
+# be cancelled. So this recipe trains in short, fully-synchronous bursts
+# (~90s each: model load + 20 steps) rather than one long detached run: each
+# burst loads the previous burst's weights from resume_from and trains
+# max_train_steps more on top, so progress accumulates across repeated
+# `modal run` invocations instead of restarting from the adapter's random
+# init every time.
+resume_from: /root/outputs/lora-sdxl/final
 
 validation_prompts:
   - "a photo of sks concept in a forest"

@@ -21,6 +21,8 @@ from dptlab.training.common import (
     add_lora_adapter,
     encode_conditioning,
     load_frozen_pipe,
+    load_lora_checkpoint,
+    save_lora_checkpoint,
     save_run_manifest,
     set_seed,
 )
@@ -46,13 +48,19 @@ def train_lora(config: TrainConfig) -> Path:
     pipe = load_frozen_pipe(config.model_key, accelerator)
     denoiser = pipe.unet if hasattr(pipe, "unet") else pipe.transformer
 
-    lora_config = LoraConfig(
-        r=config.lora_rank,
-        lora_alpha=config.lora_alpha,
-        target_modules=list(spec.lora_target_modules),
-        init_lora_weights="gaussian",
-    )
-    add_lora_adapter(denoiser, lora_config)
+    resume_from = config.extra.get("resume_from")
+    resume_weights = Path(resume_from) / "lora_weights.safetensors" if resume_from else None
+    if resume_weights and resume_weights.exists():
+        load_lora_checkpoint(pipe, denoiser, resume_weights)
+        logger.info("Resumed LoRA weights from %s", resume_from)
+    else:
+        lora_config = LoraConfig(
+            r=config.lora_rank,
+            lora_alpha=config.lora_alpha,
+            target_modules=list(spec.lora_target_modules),
+            init_lora_weights="gaussian",
+        )
+        add_lora_adapter(denoiser, lora_config)
 
     trainable_params = [p for p in denoiser.parameters() if p.requires_grad]
     optimizer = torch.optim.AdamW(trainable_params, lr=config.learning_rate)
@@ -98,26 +106,20 @@ def train_lora(config: TrainConfig) -> Path:
                 if global_step % 50 == 0:
                     logger.info("step=%d loss=%.4f", global_step, loss.item())
                 if global_step % config.checkpointing_steps == 0:
-                    _save_checkpoint(accelerator, denoiser, config, global_step)
+                    _save_checkpoint(accelerator, pipe, denoiser, config, global_step)
                 if global_step >= config.max_train_steps:
                     break
         if global_step >= config.max_train_steps:
             break
 
-    output_dir = _save_checkpoint(accelerator, denoiser, config, global_step, final=True)
+    output_dir = _save_checkpoint(accelerator, pipe, denoiser, config, global_step, final=True)
     save_run_manifest(output_dir, config, extra={"final_step": global_step})
     return output_dir
 
 
-def _save_checkpoint(accelerator, denoiser, config: TrainConfig, step: int, final: bool = False) -> Path:
-    from peft.utils import get_peft_model_state_dict
-    from safetensors.torch import save_file
-
+def _save_checkpoint(accelerator, pipe, denoiser, config: TrainConfig, step: int, final: bool = False) -> Path:
     tag = "final" if final else f"step-{step}"
     out_dir = Path(config.output_dir) / tag
-    out_dir.mkdir(parents=True, exist_ok=True)
     if accelerator.is_main_process:
-        unwrapped = accelerator.unwrap_model(denoiser)
-        state_dict = get_peft_model_state_dict(unwrapped)
-        save_file(state_dict, out_dir / "lora_weights.safetensors")
+        save_lora_checkpoint(pipe, accelerator.unwrap_model(denoiser), out_dir)
     return out_dir

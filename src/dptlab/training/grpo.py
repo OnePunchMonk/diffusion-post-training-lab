@@ -27,6 +27,7 @@ from dptlab.training.common import (
     add_lora_adapter,
     encode_conditioning,
     load_frozen_pipe,
+    save_lora_checkpoint,
     save_run_manifest,
     set_seed,
 )
@@ -121,13 +122,13 @@ def train_grpo(config: TrainConfig) -> Path:
                         global_step, rewards.mean().item(), rewards.std().item(), loss.item(),
                     )
                 if global_step % config.checkpointing_steps == 0:
-                    _save_checkpoint(accelerator, denoiser, config, global_step)
+                    _save_checkpoint(accelerator, pipe, denoiser, config, global_step)
                 if global_step >= config.max_train_steps:
                     break
         if global_step >= config.max_train_steps:
             break
 
-    output_dir = _save_checkpoint(accelerator, denoiser, config, global_step, final=True)
+    output_dir = _save_checkpoint(accelerator, pipe, denoiser, config, global_step, final=True)
     save_run_manifest(output_dir, config, extra={"final_step": global_step, "group_size": group_size})
     return output_dir
 
@@ -144,16 +145,9 @@ def _encode_latents(pipe, images):
 
 
 
-
-def _save_checkpoint(accelerator, denoiser, config: TrainConfig, step: int, final: bool = False) -> Path:
-    from peft.utils import get_peft_model_state_dict
-    from safetensors.torch import save_file
-
+def _save_checkpoint(accelerator, pipe, denoiser, config: TrainConfig, step: int, final: bool = False) -> Path:
     tag = "final" if final else f"step-{step}"
     out_dir = Path(config.output_dir) / tag
-    out_dir.mkdir(parents=True, exist_ok=True)
     if accelerator.is_main_process:
-        unwrapped = accelerator.unwrap_model(denoiser)
-        state_dict = get_peft_model_state_dict(unwrapped)
-        save_file(state_dict, out_dir / "lora_weights.safetensors")
+        save_lora_checkpoint(pipe, accelerator.unwrap_model(denoiser), out_dir)
     return out_dir

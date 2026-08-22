@@ -99,17 +99,71 @@ def load_frozen_pipe(model_key: str, accelerator):
 
 
 def add_lora_adapter(denoiser, lora_config) -> None:
-    """Inject LoRA adapters, enable gradient checkpointing (trades compute
-    for activation memory), and upcast the new adapter params to fp32 for
-    stable optimizer updates on top of bf16 frozen weights."""
-    import torch
-
+    """Inject a fresh LoRA adapter and prep it for training (see
+    `_finalize_trainable_adapter`)."""
     denoiser.requires_grad_(False)
     denoiser.add_adapter(lora_config)
+    _finalize_trainable_adapter(denoiser)
+
+
+def _finalize_trainable_adapter(denoiser) -> None:
+    """Enable gradient checkpointing (trades compute for activation memory)
+    and upcast the adapter's params to fp32 for stable optimizer updates on
+    top of bf16 frozen weights. Shared by both the fresh-adapter path
+    (`add_lora_adapter`) and the resume path (`load_lora_checkpoint`)."""
+    import torch
+
     denoiser.enable_gradient_checkpointing()
     for param in denoiser.parameters():
         if param.requires_grad:
             param.data = param.data.to(torch.float32)
+
+
+def save_lora_checkpoint(pipe, denoiser, out_dir: str | Path, filename: str = "lora_weights.safetensors") -> None:
+    """Save a LoRA adapter in the format `pipe.load_lora_weights()` actually
+    reads.
+
+    peft's own `get_peft_model_state_dict` produces keys like
+    "base_model.model.<...>.lora_A.default.weight" -- diffusers' loader
+    doesn't recognize that naming and silently loads nothing (logs "No LoRA
+    keys associated ... found", not an error), so a checkpoint saved with
+    plain `safetensors.save_file(get_peft_model_state_dict(...))` looks
+    valid on disk but the base model runs unmodified at inference time.
+    `convert_state_dict_to_diffusers` + the pipeline class's own
+    `save_lora_weights` (the same call diffusers' official training scripts
+    use) produces the format the loader expects.
+    """
+    from diffusers.utils import convert_state_dict_to_diffusers
+    from peft.utils import get_peft_model_state_dict
+
+    # get_peft_model_state_dict defaults to adapter_name="default", but a
+    # denoiser resumed via pipe.load_lora_weights() (see load_lora_checkpoint)
+    # gets whatever adapter name diffusers' loader assigned, not necessarily
+    # "default" -- so look up the actual name instead of assuming it.
+    adapter_name = next(iter(denoiser.peft_config))
+    state_dict = convert_state_dict_to_diffusers(get_peft_model_state_dict(denoiser, adapter_name=adapter_name))
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    save_kwargs = {"save_directory": str(out_dir), "safe_serialization": True, "weight_name": filename}
+    if hasattr(pipe, "unet"):
+        type(pipe).save_lora_weights(unet_lora_layers=state_dict, **save_kwargs)
+    else:
+        type(pipe).save_lora_weights(transformer_lora_layers=state_dict, **save_kwargs)
+
+
+def load_lora_checkpoint(pipe, denoiser, weights_path: str | Path) -> None:
+    """Resume from a checkpoint saved by `save_lora_checkpoint`.
+
+    Uses `pipe.load_lora_weights()` (diffusers' own loader, which injects
+    matching adapter layers straight from the checkpoint) rather than
+    manually adding a fresh adapter and round-tripping through peft's
+    get/set_peft_model_state_dict -- their key-naming convention doesn't
+    match what diffusers' save/load path produces
+    (`ValueError: Could not automatically infer state dict type`), so call
+    this *instead of* `add_lora_adapter`, not after it.
+    """
+    pipe.load_lora_weights(str(weights_path))
+    _finalize_trainable_adapter(denoiser)
 
 
 def encode_conditioning(pipe, captions: list[str], resolution: int) -> tuple:

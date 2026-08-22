@@ -22,6 +22,7 @@ from dptlab.training.common import (
     add_lora_adapter,
     encode_conditioning,
     load_frozen_pipe,
+    save_lora_checkpoint,
     save_run_manifest,
     set_seed,
 )
@@ -121,13 +122,13 @@ def train_distill(config: TrainConfig) -> Path:
                 if global_step % 50 == 0:
                     logger.info("step=%d consistency_loss=%.4f", global_step, loss.item())
                 if global_step % config.checkpointing_steps == 0:
-                    _save_checkpoint(accelerator, student, config, global_step)
+                    _save_checkpoint(accelerator, pipe, student, config, global_step)
                 if global_step >= config.max_train_steps:
                     break
         if global_step >= config.max_train_steps:
             break
 
-    output_dir = _save_checkpoint(accelerator, student, config, global_step, final=True)
+    output_dir = _save_checkpoint(accelerator, pipe, student, config, global_step, final=True)
     save_run_manifest(output_dir, config, extra={"final_step": global_step, "recipe": "distill"})
     return output_dir
 
@@ -137,15 +138,9 @@ def _ddim_timesteps(pipe, num_steps: int):
     return pipe.scheduler.timesteps
 
 
-def _save_checkpoint(accelerator, student, config: TrainConfig, step: int, final: bool = False) -> Path:
-    from peft.utils import get_peft_model_state_dict
-    from safetensors.torch import save_file
-
+def _save_checkpoint(accelerator, pipe, student, config: TrainConfig, step: int, final: bool = False) -> Path:
     tag = "final" if final else f"step-{step}"
     out_dir = Path(config.output_dir) / tag
-    out_dir.mkdir(parents=True, exist_ok=True)
     if accelerator.is_main_process:
-        unwrapped = accelerator.unwrap_model(student)
-        state_dict = get_peft_model_state_dict(unwrapped)
-        save_file(state_dict, out_dir / "lora_weights.safetensors")
+        save_lora_checkpoint(pipe, accelerator.unwrap_model(student), out_dir)
     return out_dir
