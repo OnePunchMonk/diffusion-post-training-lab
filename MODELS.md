@@ -12,6 +12,7 @@ comparison against the base model at matched prompts/seeds — see
 <!-- BEGIN MODELS_TABLE -->
 | Model | Recipe | Base | CLIP score | Aesthetic score | Win rate vs. base | Avg. latency (ms) | Steps | Date | Notes |
 |---|---|---|---|---|---|---|---|---|---|
+| [dptlab-sdxl-lora-toy-v1](https://huggingface.co/OnePunchMonk101010/dptlab-sdxl-lora-toy-v1) | lora | sdxl | 0.911 | 5.988 | n/a | 3843 | 10 | 2026-08-22 | pipeline-validation run on toy synthetic dataset, ~few real optimizer steps -- not a converged style LoRA |
 <!-- END MODELS_TABLE -->
 
 ## How a row gets here
