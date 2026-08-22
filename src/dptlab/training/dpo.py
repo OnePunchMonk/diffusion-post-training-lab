@@ -18,8 +18,15 @@ import math
 from pathlib import Path
 
 from dptlab.data.preference import PreferenceDataset
-from dptlab.models.registry import get_model_spec, load_pipeline
-from dptlab.training.common import TrainConfig, save_run_manifest, set_seed
+from dptlab.models.registry import get_model_spec
+from dptlab.training.common import (
+    TrainConfig,
+    add_lora_adapter,
+    encode_conditioning,
+    load_frozen_pipe,
+    save_run_manifest,
+    set_seed,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +47,7 @@ def train_dpo(config: TrainConfig) -> Path:
         mixed_precision=config.mixed_precision,
     )
 
-    pipe = load_pipeline(config.model_key, dtype="float32", device="cpu")
+    pipe = load_frozen_pipe(config.model_key, accelerator)
     denoiser = pipe.unet if hasattr(pipe, "unet") else pipe.transformer
 
     # Frozen reference copy: DPO needs both the trainable policy and a fixed
@@ -49,14 +56,13 @@ def train_dpo(config: TrainConfig) -> Path:
     ref_denoiser.requires_grad_(False)
     ref_denoiser.eval()
 
-    denoiser.requires_grad_(False)
     lora_config = LoraConfig(
         r=config.lora_rank,
         lora_alpha=config.lora_alpha,
         target_modules=list(spec.lora_target_modules),
         init_lora_weights="gaussian",
     )
-    denoiser.add_adapter(lora_config)
+    add_lora_adapter(denoiser, lora_config)
 
     optimizer = torch.optim.AdamW([p for p in denoiser.parameters() if p.requires_grad], lr=config.learning_rate)
 
@@ -84,13 +90,19 @@ def train_dpo(config: TrainConfig) -> Path:
                 noisy_win = pipe.scheduler.add_noise(latents_win, noise, timesteps)
                 noisy_lose = pipe.scheduler.add_noise(latents_lose, noise, timesteps)
 
-                encoder_hidden_states = _encode_prompts(pipe, batch["prompt"])
+                encoder_hidden_states, added_cond_kwargs = encode_conditioning(
+                    pipe, batch["prompt"], config.resolution
+                )
 
-                pred_win = denoiser(noisy_win, timesteps, encoder_hidden_states).sample
-                pred_lose = denoiser(noisy_lose, timesteps, encoder_hidden_states).sample
+                pred_win = denoiser(noisy_win, timesteps, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs).sample
+                pred_lose = denoiser(noisy_lose, timesteps, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs).sample
                 with torch.no_grad():
-                    ref_pred_win = ref_denoiser(noisy_win, timesteps, encoder_hidden_states).sample
-                    ref_pred_lose = ref_denoiser(noisy_lose, timesteps, encoder_hidden_states).sample
+                    ref_pred_win = ref_denoiser(
+                        noisy_win, timesteps, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs
+                    ).sample
+                    ref_pred_lose = ref_denoiser(
+                        noisy_lose, timesteps, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs
+                    ).sample
 
                 target = noise if pipe.scheduler.config.prediction_type == "epsilon" else latents_win
 
@@ -128,15 +140,11 @@ def train_dpo(config: TrainConfig) -> Path:
 
 
 def _encode_latents(pipe, pixel_values):
-    latents = pipe.vae.encode(pixel_values).latent_dist.sample()
+    import torch
+
+    with torch.no_grad():
+        latents = pipe.vae.encode(pixel_values.to(dtype=pipe.vae.dtype)).latent_dist.sample()
     return latents * pipe.vae.config.scaling_factor
-
-
-def _encode_prompts(pipe, captions: list[str]):
-    if hasattr(pipe, "encode_prompt"):
-        prompt_embeds, *_ = pipe.encode_prompt(prompt=captions, device=pipe.device)
-        return prompt_embeds
-    raise NotImplementedError("Pipeline does not expose encode_prompt; add a model-specific encoder here.")
 
 
 def _save_checkpoint(accelerator, denoiser, config: TrainConfig, step: int, final: bool = False) -> Path:

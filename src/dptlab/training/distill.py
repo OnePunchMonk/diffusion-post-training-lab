@@ -16,8 +16,15 @@ import math
 from pathlib import Path
 
 from dptlab.data.dataset import PromptOnlyDataset
-from dptlab.models.registry import get_model_spec, load_pipeline
-from dptlab.training.common import TrainConfig, save_run_manifest, set_seed
+from dptlab.models.registry import get_model_spec
+from dptlab.training.common import (
+    TrainConfig,
+    add_lora_adapter,
+    encode_conditioning,
+    load_frozen_pipe,
+    save_run_manifest,
+    set_seed,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -40,23 +47,23 @@ def train_distill(config: TrainConfig) -> Path:
         mixed_precision=config.mixed_precision,
     )
 
-    pipe = load_pipeline(config.model_key, dtype="float32", device="cpu")
+    pipe = load_frozen_pipe(config.model_key, accelerator)
     teacher = pipe.unet if hasattr(pipe, "unet") else pipe.transformer
     teacher.requires_grad_(False)
     teacher.eval()
 
-    # Student starts as a LoRA-adapted copy of the teacher; target network is
-    # an EMA shadow of the student, standard consistency-distillation setup.
-    student = teacher
-    student.requires_grad_(False)
+    # Student is a separate LoRA-adapted copy of the teacher (not the same
+    # object!) so the teacher stays a fixed, unmodified supervision signal
+    # throughout training. Target network is an EMA shadow of the student.
+    student = copy.deepcopy(teacher)
     lora_config = LoraConfig(
         r=config.lora_rank,
         lora_alpha=config.lora_alpha,
         target_modules=list(spec.lora_target_modules),
         init_lora_weights="gaussian",
     )
-    student.add_adapter(lora_config)
-    target = copy.deepcopy(student)
+    add_lora_adapter(student, lora_config)
+    target = copy.deepcopy(student).to(accelerator.device)
     target.requires_grad_(False)
 
     pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
@@ -73,9 +80,12 @@ def train_distill(config: TrainConfig) -> Path:
     for _epoch in range(max_epochs):
         for batch in dataloader:
             with accelerator.accumulate(student):
-                encoder_hidden_states = _encode_prompts(pipe, batch["prompt"])
+                encoder_hidden_states, added_cond_kwargs = encode_conditioning(
+                    pipe, batch["prompt"], config.resolution
+                )
                 latents = torch.randn(
-                    (len(batch["prompt"]), 4, config.resolution // 8, config.resolution // 8)
+                    (len(batch["prompt"]), 4, config.resolution // 8, config.resolution // 8),
+                    device=accelerator.device,
                 )
 
                 # Sample two adjacent points on the teacher's PF-ODE trajectory
@@ -85,11 +95,17 @@ def train_distill(config: TrainConfig) -> Path:
                 t_n, t_np1 = _ddim_timesteps(pipe, num_ddim_steps)[idx : idx + 2]
 
                 with torch.no_grad():
-                    teacher_pred = teacher(latents, t_np1, encoder_hidden_states).sample
+                    teacher_pred = teacher(
+                        latents, t_np1, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs
+                    ).sample
                     x_prev = pipe.scheduler.step(teacher_pred, t_np1, latents).prev_sample
-                    target_pred = target(x_prev, t_n, encoder_hidden_states).sample
+                    target_pred = target(
+                        x_prev, t_n, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs
+                    ).sample
 
-                student_pred = student(latents, t_np1, encoder_hidden_states).sample
+                student_pred = student(
+                    latents, t_np1, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs
+                ).sample
                 loss = F.mse_loss(student_pred.float(), target_pred.float())
 
                 accelerator.backward(loss)
@@ -119,13 +135,6 @@ def train_distill(config: TrainConfig) -> Path:
 def _ddim_timesteps(pipe, num_steps: int):
     pipe.scheduler.set_timesteps(num_steps)
     return pipe.scheduler.timesteps
-
-
-def _encode_prompts(pipe, captions: list[str]):
-    if hasattr(pipe, "encode_prompt"):
-        prompt_embeds, *_ = pipe.encode_prompt(prompt=captions, device=pipe.device)
-        return prompt_embeds
-    raise NotImplementedError("Pipeline does not expose encode_prompt; add a model-specific encoder here.")
 
 
 def _save_checkpoint(accelerator, student, config: TrainConfig, step: int, final: bool = False) -> Path:

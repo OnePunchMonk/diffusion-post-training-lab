@@ -15,8 +15,15 @@ import math
 from pathlib import Path
 
 from dptlab.data.dataset import ImageCaptionDataset
-from dptlab.models.registry import get_model_spec, load_pipeline
-from dptlab.training.common import TrainConfig, save_run_manifest, set_seed
+from dptlab.models.registry import get_model_spec
+from dptlab.training.common import (
+    TrainConfig,
+    add_lora_adapter,
+    encode_conditioning,
+    load_frozen_pipe,
+    save_run_manifest,
+    set_seed,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -36,14 +43,8 @@ def train_lora(config: TrainConfig) -> Path:
         mixed_precision=config.mixed_precision,
     )
 
-    pipe = load_pipeline(config.model_key, dtype="float32", device="cpu")
-    pipe.vae.requires_grad_(False)
-    pipe.text_encoder.requires_grad_(False)
-    if hasattr(pipe, "text_encoder_2"):
-        pipe.text_encoder_2.requires_grad_(False)
-
+    pipe = load_frozen_pipe(config.model_key, accelerator)
     denoiser = pipe.unet if hasattr(pipe, "unet") else pipe.transformer
-    denoiser.requires_grad_(False)
 
     lora_config = LoraConfig(
         r=config.lora_rank,
@@ -51,7 +52,7 @@ def train_lora(config: TrainConfig) -> Path:
         target_modules=list(spec.lora_target_modules),
         init_lora_weights="gaussian",
     )
-    denoiser.add_adapter(lora_config)
+    add_lora_adapter(denoiser, lora_config)
 
     trainable_params = [p for p in denoiser.parameters() if p.requires_grad]
     optimizer = torch.optim.AdamW(trainable_params, lr=config.learning_rate)
@@ -67,7 +68,9 @@ def train_lora(config: TrainConfig) -> Path:
     for _epoch in range(max_epochs):
         for batch in dataloader:
             with accelerator.accumulate(denoiser):
-                latents = pipe.vae.encode(batch["pixel_values"]).latent_dist.sample()
+                pixel_values = batch["pixel_values"].to(dtype=pipe.vae.dtype)
+                with torch.no_grad():
+                    latents = pipe.vae.encode(pixel_values).latent_dist.sample()
                 latents = latents * pipe.vae.config.scaling_factor
 
                 noise = torch.randn_like(latents)
@@ -76,8 +79,12 @@ def train_lora(config: TrainConfig) -> Path:
                 ).long()
                 noisy_latents = pipe.scheduler.add_noise(latents, noise, timesteps)
 
-                encoder_hidden_states = _encode_prompts(pipe, batch["caption"])
-                model_pred = denoiser(noisy_latents, timesteps, encoder_hidden_states).sample
+                encoder_hidden_states, added_cond_kwargs = encode_conditioning(
+                    pipe, batch["caption"], config.resolution
+                )
+                model_pred = denoiser(
+                    noisy_latents, timesteps, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs
+                ).sample
 
                 target = noise if pipe.scheduler.config.prediction_type == "epsilon" else latents
                 loss = F.mse_loss(model_pred.float(), target.float())
@@ -100,15 +107,6 @@ def train_lora(config: TrainConfig) -> Path:
     output_dir = _save_checkpoint(accelerator, denoiser, config, global_step, final=True)
     save_run_manifest(output_dir, config, extra={"final_step": global_step})
     return output_dir
-
-
-def _encode_prompts(pipe, captions: list[str]):
-    """Model-agnostic text encoding: dispatches on whether the pipeline has one
-    or two text encoders (SDXL) vs. a single T5 (Flux)."""
-    if hasattr(pipe, "encode_prompt"):
-        prompt_embeds, *_ = pipe.encode_prompt(prompt=captions, device=pipe.device)
-        return prompt_embeds
-    raise NotImplementedError("Pipeline does not expose encode_prompt; add a model-specific encoder here.")
 
 
 def _save_checkpoint(accelerator, denoiser, config: TrainConfig, step: int, final: bool = False) -> Path:

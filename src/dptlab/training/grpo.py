@@ -21,8 +21,15 @@ from pathlib import Path
 
 from dptlab.data.dataset import PromptOnlyDataset
 from dptlab.eval.metrics.clip_score import CLIPScorer
-from dptlab.models.registry import get_model_spec, load_pipeline
-from dptlab.training.common import TrainConfig, save_run_manifest, set_seed
+from dptlab.models.registry import get_model_spec
+from dptlab.training.common import (
+    TrainConfig,
+    add_lora_adapter,
+    encode_conditioning,
+    load_frozen_pipe,
+    save_run_manifest,
+    set_seed,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -44,9 +51,8 @@ def train_grpo(config: TrainConfig) -> Path:
         mixed_precision=config.mixed_precision,
     )
 
-    pipe = load_pipeline(config.model_key, dtype="float32", device="cpu")
+    pipe = load_frozen_pipe(config.model_key, accelerator)
     denoiser = pipe.unet if hasattr(pipe, "unet") else pipe.transformer
-    denoiser.requires_grad_(False)
 
     lora_config = LoraConfig(
         r=config.lora_rank,
@@ -54,7 +60,7 @@ def train_grpo(config: TrainConfig) -> Path:
         target_modules=list(spec.lora_target_modules),
         init_lora_weights="gaussian",
     )
-    denoiser.add_adapter(lora_config)
+    add_lora_adapter(denoiser, lora_config)
 
     optimizer = torch.optim.AdamW([p for p in denoiser.parameters() if p.requires_grad], lr=config.learning_rate)
     reward_model = CLIPScorer()
@@ -89,9 +95,13 @@ def train_grpo(config: TrainConfig) -> Path:
                     0, pipe.scheduler.config.num_train_timesteps, (latents.shape[0],), device=latents.device
                 ).long()
                 noisy_latents = pipe.scheduler.add_noise(latents, noise, timesteps)
-                encoder_hidden_states = _encode_prompts(pipe, [prompt] * group_size)
+                encoder_hidden_states, added_cond_kwargs = encode_conditioning(
+                    pipe, [prompt] * group_size, config.resolution
+                )
 
-                model_pred = denoiser(noisy_latents, timesteps, encoder_hidden_states).sample
+                model_pred = denoiser(
+                    noisy_latents, timesteps, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs
+                ).sample
                 target = noise if pipe.scheduler.config.prediction_type == "epsilon" else latents
                 per_sample_loss = F.mse_loss(model_pred.float(), target.float(), reduction="none").mean([1, 2, 3])
 
@@ -125,16 +135,14 @@ def train_grpo(config: TrainConfig) -> Path:
 def _encode_latents(pipe, images):
     import torch
 
-    pixel_values = torch.stack([pipe.image_processor.preprocess(img).squeeze(0) for img in images])
-    latents = pipe.vae.encode(pixel_values).latent_dist.sample()
+    pixel_values = torch.stack(
+        [pipe.image_processor.preprocess(img).squeeze(0) for img in images]
+    ).to(device=pipe.vae.device, dtype=pipe.vae.dtype)
+    with torch.no_grad():
+        latents = pipe.vae.encode(pixel_values).latent_dist.sample()
     return latents * pipe.vae.config.scaling_factor
 
 
-def _encode_prompts(pipe, captions: list[str]):
-    if hasattr(pipe, "encode_prompt"):
-        prompt_embeds, *_ = pipe.encode_prompt(prompt=captions, device=pipe.device)
-        return prompt_embeds
-    raise NotImplementedError("Pipeline does not expose encode_prompt; add a model-specific encoder here.")
 
 
 def _save_checkpoint(accelerator, denoiser, config: TrainConfig, step: int, final: bool = False) -> Path:

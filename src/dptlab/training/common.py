@@ -72,3 +72,74 @@ def save_run_manifest(output_dir: str | Path, config: TrainConfig, extra: dict |
 
 def load_run_manifest(checkpoint_dir: str | Path) -> dict:
     return json.loads((Path(checkpoint_dir) / "run_manifest.json").read_text())
+
+
+def load_frozen_pipe(model_key: str, accelerator):
+    """Load a pipeline in bf16 and move it to the accelerator's device.
+
+    A10G-class GPUs (22-24GB) can't fit an SDXL UNet + VAE + two text
+    encoders in fp32 (~15GB of weights alone) plus 1024px training
+    activations. Frozen components never need fp32 precision, so they're
+    loaded directly in bf16; LoRA parameters get upcast to fp32 separately
+    (see `add_lora_adapter`) since low-rank adapters are small and benefit
+    from full-precision optimizer updates. VAE slicing/tiling further caps
+    activation memory during encode/decode at minimal quality cost.
+    """
+    from dptlab.models.registry import load_pipeline
+
+    pipe = load_pipeline(model_key, dtype="bfloat16", device="cpu")
+    pipe.to(accelerator.device)
+    pipe.vae.requires_grad_(False)
+    pipe.vae.enable_slicing()
+    pipe.vae.enable_tiling()
+    pipe.text_encoder.requires_grad_(False)
+    if hasattr(pipe, "text_encoder_2"):
+        pipe.text_encoder_2.requires_grad_(False)
+    return pipe
+
+
+def add_lora_adapter(denoiser, lora_config) -> None:
+    """Inject LoRA adapters, enable gradient checkpointing (trades compute
+    for activation memory), and upcast the new adapter params to fp32 for
+    stable optimizer updates on top of bf16 frozen weights."""
+    import torch
+
+    denoiser.requires_grad_(False)
+    denoiser.add_adapter(lora_config)
+    denoiser.enable_gradient_checkpointing()
+    for param in denoiser.parameters():
+        if param.requires_grad:
+            param.data = param.data.to(torch.float32)
+
+
+def encode_conditioning(pipe, captions: list[str], resolution: int) -> tuple:
+    """Text conditioning for the denoiser forward pass, model-agnostic.
+
+    SDXL's UNet is conditioned on more than the text sequence embeddings: it
+    also needs the pooled text embedding and a set of "add time ids"
+    (original/crop/target size) via `added_cond_kwargs`, or every forward
+    pass raises `TypeError: argument of type 'NoneType' is not iterable`
+    inside `get_aug_embed`. FLUX's transformer takes only the sequence
+    embeddings, so `added_cond_kwargs` is empty there. Returns
+    (encoder_hidden_states, added_cond_kwargs).
+    """
+    if hasattr(pipe, "unet"):  # SDXL
+        prompt_embeds, _neg_embeds, pooled_prompt_embeds, _neg_pooled = pipe.encode_prompt(
+            prompt=captions, device=pipe.device, num_images_per_prompt=1, do_classifier_free_guidance=False
+        )
+        add_time_ids = pipe._get_add_time_ids(
+            (resolution, resolution),
+            (0, 0),
+            (resolution, resolution),
+            dtype=prompt_embeds.dtype,
+            text_encoder_projection_dim=pipe.text_encoder_2.config.projection_dim,
+        ).to(pipe.device)
+        add_time_ids = add_time_ids.repeat(prompt_embeds.shape[0], 1)
+        added_cond_kwargs = {"text_embeds": pooled_prompt_embeds, "time_ids": add_time_ids}
+        return prompt_embeds, added_cond_kwargs
+
+    if hasattr(pipe, "encode_prompt"):  # FLUX and other single-conditioning pipelines
+        prompt_embeds, *_ = pipe.encode_prompt(prompt=captions, prompt_2=captions, device=pipe.device)
+        return prompt_embeds, {}
+
+    raise NotImplementedError("Pipeline does not expose encode_prompt; add a model-specific encoder here.")
