@@ -1,0 +1,23 @@
+recipe: grpo
+model_key: sdxl
+dataset_path: prompts/grpo_seed_prompts.txt
+output_dir: outputs/grpo-sdxl
+
+resolution: 1024
+learning_rate: 1.0e-5
+train_batch_size: 1
+gradient_accumulation_steps: 4
+max_train_steps: 800
+lora_rank: 8
+lora_alpha: 8
+mixed_precision: bf16
+seed: 42
+checkpointing_steps: 200
+
+group_size: 4      # samples per prompt for the group-relative advantage
+kl_coeff: 0.04      # DeepSeek-R1's default GRPO KL weight
+
+validation_prompts:
+  - "a corgi wearing sunglasses, studio photo"
+  - "an isometric city block, vibrant colors"
+validation_steps: 200

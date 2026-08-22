@@ -1,0 +1,29 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# training artifacts
+outputs/
+checkpoints/
+wandb/
+*.safetensors
+*.ckpt
+
+# eval artifacts
+eval_results/
+*.jsonl.gen
+
+# data
+data/raw/
+data/processed/
+
+# secrets
+.env
+.modal.toml
