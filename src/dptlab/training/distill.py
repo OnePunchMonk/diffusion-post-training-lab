@@ -3,9 +3,11 @@
 Reference: Luo et al., "Latent Consistency Models" (2023). Trains a student
 copy of the (optionally LoRA/DPO/GRPO-tuned) teacher to predict a consistency
 function along the teacher's ODE trajectory, so the student converges in
-4-8 steps instead of 25-50. This directly motivates the deployment story:
-a distilled checkpoint is what actually makes a Modal endpoint cheap, since
-inference cost scales ~linearly with denoising steps.
+4-8 steps instead of 25-50. Inference cost scales ~linearly with denoising
+steps, so this is the recipe that determines serving cost.
+
+STATUS: EXPERIMENTAL — has known correctness bugs, see the comments in the
+training loop. Do not cite results from this recipe.
 """
 
 from __future__ import annotations
@@ -92,6 +94,18 @@ def train_distill(config: TrainConfig) -> Path:
                 # Sample two adjacent points on the teacher's PF-ODE trajectory
                 # (skipping-step DDIM) and require student(t_n) ~= student(t_{n+1}),
                 # i.e. the consistency property, rather than matching noise directly.
+                #
+                # KNOWN-WRONG (see module docstring), three issues:
+                #   1. `latents` below is pure noise, but is then used as the
+                #      input at an arbitrary t_{n+1}. Consistency distillation
+                #      needs a real latent noised TO that timestep, so as
+                #      written every step trains at the sigma_max marginal.
+                #   2. The loss compares raw eps-predictions at two different
+                #      timesteps; the consistency function is over x0, so both
+                #      predictions must be converted to x0 before the MSE.
+                #   3. The (4, res//8, res//8) shape hardcodes SD/SDXL latent
+                #      geometry and does not hold for FLUX (16 packed channels),
+                #      despite the registry advertising a one-line model swap.
                 idx = torch.randint(0, num_ddim_steps - 1, (1,)).item()
                 t_n, t_np1 = _ddim_timesteps(pipe, num_ddim_steps)[idx : idx + 2]
 

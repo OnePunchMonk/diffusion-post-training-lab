@@ -37,18 +37,27 @@ The DPO, GRPO, and distillation recipes have their own seed prompt files in
 `distill_seed_prompts.txt`) — DPO additionally needs preference pairs, built
 with `scripts/build_preference_pairs.py` from those seed prompts.
 
+## Status
+
+`lora` and `dpo` are implemented and runnable. `grpo` and `distill` are
+marked experimental: they run, but their training objectives have known
+defects documented at the top of each module, and no results from them are
+published in `MODELS.md`. They are kept in-tree as work in progress, not as
+validated recipes.
+
 ## Recipes
 
 | Recipe | File | Idea | Reference |
 |---|---|---|---|
 | **LoRA fine-tune** | `src/dptlab/training/lora.py` | Teach a new concept/style via low-rank adapters on the denoiser's attention projections. | DreamBooth / LoRA |
 | **Diffusion-DPO** | `src/dptlab/training/dpo.py` | Preference alignment from (win, lose) image pairs, using a frozen reference copy — the diffusion analogue of RLHF's DPO. | Wallace et al. 2023 |
-| **GRPO** | `src/dptlab/training/grpo.py` | Group-relative RL: sample a group of images per prompt, score each with the eval harness itself as the reward, optimize relative to the group mean. No reference model, no human labels. | DeepSeek GRPO / Flow-GRPO-style diffusion RL |
-| **Step-distillation** | `src/dptlab/training/distill.py` | Consistency-distill a (possibly DPO/GRPO-tuned) teacher into a 4-step student — this is what actually makes the Modal endpoint cheap. | Latent Consistency Models |
+| **GRPO** ⚠️ | `src/dptlab/training/grpo.py` | Group-relative RL: sample a group of images per prompt, score each with the eval harness itself as the reward, optimize relative to the group mean. **Experimental — the policy update is not a correct GRPO surrogate; see the module docstring.** | DeepSeek GRPO / Flow-GRPO-style diffusion RL |
+| **Step-distillation** ⚠️ | `src/dptlab/training/distill.py` | Consistency-distill a (possibly DPO-tuned) teacher into a 4-step student. **Experimental — known correctness bugs, see the module docstring.** | Latent Consistency Models |
 
 Every recipe reads the same `TrainConfig` YAML shape (`configs/recipes/*.yaml`),
-goes through the same `models/registry.py` (so SDXL and FLUX are one-line
-swaps), and writes checkpoints with a `run_manifest.json` that the eval
+goes through the same `models/registry.py` (SDXL and FLUX are one-line swaps
+for the LoRA and DPO recipes; the distillation recipe still hardcodes SD-family
+latent geometry), and writes checkpoints with a `run_manifest.json` that the eval
 harness and the Hub-publishing script both read to know which base model +
 recipe produced them.
 

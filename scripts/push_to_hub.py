@@ -1,12 +1,12 @@
 """Publish a checkpoint to the Hugging Face Hub instead of standing up a
 persistent Modal endpoint.
 
-For a portfolio project, "clone this repo, `hub.load_lora_weights(repo_id)`"
-is a better deliverable than a Modal endpoint someone else can't hit without
-your account — the Hub listing IS the demo. Every push writes a model card
-generated from the checkpoint's `run_manifest.json` (so base model, recipe,
-and hyperparameters are always documented) and, if an eval report exists for
-that checkpoint, embeds the benchmark numbers directly in the card.
+Publishing to the Hub keeps checkpoints loadable with
+`hub.load_lora_weights(repo_id)` without requiring access to a running Modal
+account. Every push writes a model card generated from the checkpoint's
+`run_manifest.json` (so base model, recipe, and hyperparameters are always
+documented) and, if an eval report exists for that checkpoint, embeds the
+benchmark numbers directly in the card.
 
 Usage:
   python scripts/push_to_hub.py --checkpoint outputs/dpo-sdxl/final \

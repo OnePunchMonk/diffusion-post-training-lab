@@ -2,12 +2,13 @@
 
 Reference: Wallace et al., "Diffusion Model Alignment Using Direct Preference
 Optimization" (2023). Given (prompt, image_win, image_lose) preference triples,
-we train a LoRA-adapted policy model against a frozen reference copy of the
-same weights, pushing the denoising loss lower on the winning image relative
-to the reference model and higher on the losing image, at a shared noise/
-timestep draw. This is the technique most worth discussing in an interview:
-it is closer to modern LLM RLHF pipelines than plain supervised fine-tuning,
-and it directly targets human-judged quality rather than reconstruction loss.
+we train a LoRA-adapted policy against a frozen reference copy of the same
+weights, pushing the denoising loss lower on the winning image relative to the
+reference and higher on the losing image, at a shared noise/timestep draw.
+
+The optimization target is the preference margin rather than reconstruction
+error, so this needs paired data (`scripts/build_preference_pairs.py`) and a
+reference forward pass on both branches of every batch.
 """
 
 from __future__ import annotations
@@ -114,8 +115,7 @@ def train_dpo(config: TrainConfig) -> Path:
 
                 # Implicit reward margin: how much more the policy improved on
                 # the winning sample relative to the losing sample, vs. the
-                # frozen reference. This is the Diffusion-DPO loss (Eq. 14 in
-                # Wallace et al.), not vanilla denoising MSE.
+                # frozen reference (Wallace et al. Eq. 14).
                 policy_margin = pol_loss_win - pol_loss_lose
                 ref_margin = ref_loss_win - ref_loss_lose
                 loss = -F.logsigmoid(-beta * (policy_margin - ref_margin)).mean()

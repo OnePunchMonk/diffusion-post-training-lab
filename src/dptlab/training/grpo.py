@@ -1,16 +1,20 @@
 """Recipe D: GRPO (Group Relative Policy Optimization) with an automatic reward.
 
-Inspired by DeepSeek's GRPO (DeepSeekMath / DeepSeek-R1) and its recent
-diffusion-model adaptations ("Flow-GRPO"-style work): instead of Diffusion-DPO's
-need for a frozen reference model and pre-collected (win, lose) pairs, GRPO
-samples a *group* of G images per prompt from the current policy, scores each
-with an automatic reward function, and optimizes each sample's advantage
-relative to the group mean. No reference model, no human-labeled pairs.
+Group structure follows DeepSeek's GRPO (DeepSeekMath / DeepSeek-R1): sample
+a group of G images per prompt from the current policy, score each with an
+automatic reward, and normalize each sample's reward against the group mean
+to get an advantage. The reward is `dptlab.eval.metrics` (CLIP + aesthetic),
+so the same scorers that evaluate checkpoints also train them.
 
-The reward function here is literally `dptlab.eval.metrics` (CLIP score +
-aesthetic score) — the eval harness IS the reward model, which closes the
-loop between "how we measure quality" and "how we optimize for it" and is the
-main thing worth highlighting about this recipe in a writeup.
+STATUS: EXPERIMENTAL — NOT A CORRECT GRPO IMPLEMENTATION. The group sampling
+and advantage estimation are right; the policy update is not. A real GRPO
+surrogate needs the log-probability ratio between the current and old policy,
+which for a diffusion model means treating sampling as an SDE and summing the
+per-step Gaussian log-densities along the denoising trajectory (this is the
+core contribution of the Flow-GRPO line of work). This file instead weights
+the denoising MSE by the advantage, which is not a policy gradient and is
+unbounded below for negative advantages. See the comments at the loss for
+what specifically is wrong. Do not cite results from this recipe.
 """
 
 from __future__ import annotations
@@ -87,9 +91,14 @@ def train_grpo(config: TrainConfig) -> Path:
 
             with accelerator.accumulate(denoiser):
                 # Re-run the forward denoising pass (with grad) for each group
-                # member at a shared timestep draw, weighting the per-sample
-                # loss by its normalized advantage — the GRPO policy-gradient
-                # surrogate, not a reconstruction loss.
+                # member, weighting the per-sample denoising loss by its
+                # normalized advantage.
+                #
+                # KNOWN-WRONG (see module docstring): this is not the GRPO
+                # surrogate. There is no log-prob ratio and no clipping, so
+                # for advantage < 0 the objective rewards maximizing
+                # reconstruction error and is unbounded below. Fixing it
+                # requires per-step log-densities over the sampling chain.
                 latents = _encode_latents(pipe, group_images)
                 noise = torch.randn_like(latents)
                 timesteps = torch.randint(
@@ -107,7 +116,11 @@ def train_grpo(config: TrainConfig) -> Path:
                 per_sample_loss = F.mse_loss(model_pred.float(), target.float(), reduction="none").mean([1, 2, 3])
 
                 policy_loss = (per_sample_loss * advantages.to(per_sample_loss.device)).mean()
-                kl_penalty = kl_coeff * per_sample_loss.mean()  # proxy KL-to-init term
+                # KNOWN-WRONG: this is not a KL to any reference distribution
+                # -- it is the same denoising loss again, so it only rescales
+                # the objective by (1 + kl_coeff). A real KL term needs a
+                # frozen reference policy to measure divergence against.
+                kl_penalty = kl_coeff * per_sample_loss.mean()
                 loss = policy_loss + kl_penalty
 
                 accelerator.backward(loss)
