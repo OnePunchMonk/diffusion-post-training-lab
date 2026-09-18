@@ -1,11 +1,20 @@
-"""Recipe A: LoRA fine-tuning on a custom concept/style dataset.
+"""Recipe A: parameter-efficient fine-tuning on a custom concept/style dataset.
 
-Standard diffusers-style LoRA training loop: freeze the UNet/transformer,
-inject LoRA adapters into the attention projections defined by the model's
-ModelSpec, and train on (image, caption) pairs with the usual epsilon/
-v-prediction denoising loss. This is the cheapest recipe and the one that
-proves the end-to-end pipeline (data -> train -> checkpoint -> eval -> serve)
-before the pricier DPO and distillation recipes reuse the same scaffolding.
+Freeze the UNet/transformer, inject an adapter into the projections named by
+the model's ModelSpec, and train on (image, caption) pairs. This is the
+cheapest recipe and the one that proves the end-to-end pipeline (data -> train
+-> checkpoint -> eval -> serve) before the pricier DPO and distillation
+recipes reuse the same scaffolding.
+
+Two axes are configurable and deliberately orthogonal:
+
+- **Which adapter** (`peft_method`: lora / dora / loha / lokr / oft / boft),
+  handled by `training.peft_methods`.
+- **Which denoising objective** (epsilon for SDXL, rectified flow for
+  FLUX.2 [klein]), handled by `training.objectives`.
+
+The recipe is still called "lora" in the config for backwards compatibility
+with existing checkpoints and the MODELS.md leaderboard.
 """
 
 from __future__ import annotations
@@ -19,12 +28,18 @@ from dptlab.models.registry import get_model_spec
 from dptlab.training.common import (
     TrainConfig,
     add_lora_adapter,
-    encode_conditioning,
     load_frozen_pipe,
-    load_lora_checkpoint,
-    save_lora_checkpoint,
     save_run_manifest,
     set_seed,
+)
+from dptlab.training.objectives import get_objective
+from dptlab.training.peft_methods import (
+    adapter_exists,
+    build_peft_config,
+    count_trainable_parameters,
+    get_method_spec,
+    load_peft_checkpoint,
+    save_peft_checkpoint,
 )
 
 logger = logging.getLogger(__name__)
@@ -32,13 +47,13 @@ logger = logging.getLogger(__name__)
 
 def train_lora(config: TrainConfig) -> Path:
     import torch
-    import torch.nn.functional as F
     from accelerate import Accelerator
-    from peft import LoraConfig
     from torch.utils.data import DataLoader
 
     set_seed(config.seed)
     spec = get_model_spec(config.model_key)
+    method = get_method_spec(config.peft_method)
+    objective = get_objective(spec)
 
     accelerator = Accelerator(
         gradient_accumulation_steps=config.gradient_accumulation_steps,
@@ -49,23 +64,24 @@ def train_lora(config: TrainConfig) -> Path:
     denoiser = pipe.unet if hasattr(pipe, "unet") else pipe.transformer
 
     resume_from = config.extra.get("resume_from")
-    resume_weights = Path(resume_from) / "lora_weights.safetensors" if resume_from else None
-    if resume_weights and resume_weights.exists():
-        load_lora_checkpoint(pipe, denoiser, resume_weights)
-        logger.info("Resumed LoRA weights from %s", resume_from)
+    if resume_from and adapter_exists(resume_from, config.peft_method):
+        load_peft_checkpoint(pipe, denoiser, resume_from, config.peft_method)
+        logger.info("Resumed %s adapter from %s", config.peft_method, resume_from)
     else:
-        lora_config = LoraConfig(
-            r=config.lora_rank,
-            lora_alpha=config.lora_alpha,
-            target_modules=list(spec.lora_target_modules),
-            init_lora_weights="gaussian",
-        )
-        add_lora_adapter(denoiser, lora_config)
+        add_lora_adapter(denoiser, build_peft_config(config, spec))
 
     trainable_params = [p for p in denoiser.parameters() if p.requires_grad]
+    num_trainable = count_trainable_parameters(denoiser)
+    logger.info(
+        "method=%s model=%s trainable_params=%d (%.2fM)",
+        config.peft_method,
+        config.model_key,
+        num_trainable,
+        num_trainable / 1e6,
+    )
     optimizer = torch.optim.AdamW(trainable_params, lr=config.learning_rate)
 
-    dataset = ImageCaptionDataset(config.dataset_path, resolution=config.resolution)
+    dataset = ImageCaptionDataset(config.dataset_path, resolution=config.resolution, use_masks=config.use_masks)
     dataloader = DataLoader(dataset, batch_size=config.train_batch_size, shuffle=True)
 
     denoiser, optimizer, dataloader = accelerator.prepare(denoiser, optimizer, dataloader)
@@ -76,28 +92,11 @@ def train_lora(config: TrainConfig) -> Path:
     for _epoch in range(max_epochs):
         for batch in dataloader:
             with accelerator.accumulate(denoiser):
-                pixel_values = batch["pixel_values"].to(dtype=pipe.vae.dtype)
-                with torch.no_grad():
-                    latents = pipe.vae.encode(pixel_values).latent_dist.sample()
-                latents = latents * pipe.vae.config.scaling_factor
-
-                noise = torch.randn_like(latents)
-                timesteps = torch.randint(
-                    0, pipe.scheduler.config.num_train_timesteps, (latents.shape[0],), device=latents.device
-                ).long()
-                noisy_latents = pipe.scheduler.add_noise(latents, noise, timesteps)
-
-                encoder_hidden_states, added_cond_kwargs = encode_conditioning(
-                    pipe, batch["caption"], config.resolution
-                )
-                model_pred = denoiser(
-                    noisy_latents, timesteps, encoder_hidden_states, added_cond_kwargs=added_cond_kwargs
-                ).sample
-
-                target = noise if pipe.scheduler.config.prediction_type == "epsilon" else latents
-                loss = F.mse_loss(model_pred.float(), target.float())
+                loss = objective.loss(pipe, denoiser, batch, config)
 
                 accelerator.backward(loss)
+                if accelerator.sync_gradients and config.max_grad_norm:
+                    accelerator.clip_grad_norm_(trainable_params, config.max_grad_norm)
                 optimizer.step()
                 optimizer.zero_grad()
 
@@ -113,7 +112,16 @@ def train_lora(config: TrainConfig) -> Path:
             break
 
     output_dir = _save_checkpoint(accelerator, pipe, denoiser, config, global_step, final=True)
-    save_run_manifest(output_dir, config, extra={"final_step": global_step})
+    save_run_manifest(
+        output_dir,
+        config,
+        extra={
+            "final_step": global_step,
+            "peft_method": config.peft_method,
+            "trainable_parameters": num_trainable,
+            "adapter_format": "diffusers" if method.diffusers_native else "peft",
+        },
+    )
     return output_dir
 
 
@@ -121,5 +129,5 @@ def _save_checkpoint(accelerator, pipe, denoiser, config: TrainConfig, step: int
     tag = "final" if final else f"step-{step}"
     out_dir = Path(config.output_dir) / tag
     if accelerator.is_main_process:
-        save_lora_checkpoint(pipe, accelerator.unwrap_model(denoiser), out_dir)
+        save_peft_checkpoint(pipe, accelerator.unwrap_model(denoiser), out_dir, config.peft_method)
     return out_dir

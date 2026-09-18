@@ -1,12 +1,18 @@
 """Publish a checkpoint to the Hugging Face Hub instead of standing up a
 persistent Modal endpoint.
 
-Publishing to the Hub keeps checkpoints loadable with
-`hub.load_lora_weights(repo_id)` without requiring access to a running Modal
-account. Every push writes a model card generated from the checkpoint's
-`run_manifest.json` (so base model, recipe, and hyperparameters are always
-documented) and, if an eval report exists for that checkpoint, embeds the
-benchmark numbers directly in the card.
+Publishing to the Hub keeps checkpoints loadable without access to a running
+Modal account. Every push writes a model card generated from the checkpoint's
+`run_manifest.json` (so base model, recipe, PEFT method, and hyperparameters
+are always documented) and, if an eval report exists, embeds the benchmark
+numbers directly in the card.
+
+The usage snippet in the card is method-aware, and that matters: only a plain
+LoRA checkpoint loads with `pipe.load_lora_weights(repo_id)`. A LoHa / LoKr /
+OFT / BOFT / DoRA adapter needs peft to inject matching layers first, and
+diffusers' loader given one of those logs "no LoRA keys found" and serves the
+base model -- a card promising `load_lora_weights` would send every downloader
+straight into that trap.
 
 Usage:
   python scripts/push_to_hub.py --checkpoint outputs/dpo-sdxl/final \
@@ -27,16 +33,19 @@ license: {license}
 base_model: {base_model_id}
 tags:
   - diffusers
-  - lora
   - text-to-image
   - {recipe}
+  - {peft_method}
   - dptlab
 ---
 
 # {repo_name}
 
 Post-trained with [`dptlab`](https://github.com/OnePunchMonk/diffusion-post-training-lab)
-using the **{recipe}** recipe on top of `{base_model_id}`.
+using the **{recipe}** recipe with a **{peft_method}** adapter on top of
+`{base_model_id}`.
+
+{trainable_line}
 
 ## Training config
 
@@ -51,26 +60,51 @@ using the **{recipe}** recipe on top of `{base_model_id}`.
 ## Usage
 
 ```python
+{usage_snippet}
+```
+"""
+
+_LORA_USAGE = """import torch
 from diffusers import DiffusionPipeline
-import torch
 
 pipe = DiffusionPipeline.from_pretrained("{base_model_id}", torch_dtype=torch.bfloat16).to("cuda")
 pipe.load_lora_weights("{repo_id}")
 
-image = pipe(prompt="your prompt here").images[0]
-```
-"""
+image = pipe(prompt="your prompt here", num_inference_steps={steps}, guidance_scale={guidance}).images[0]"""
+
+# Non-LoRA adapters are not a format diffusers' loader understands. peft has to
+# inject the matching layer type first, which is what load_peft_checkpoint does.
+_PEFT_USAGE = """import torch
+from diffusers import DiffusionPipeline
+from huggingface_hub import snapshot_download
+
+# `{peft_method}` is not a format `pipe.load_lora_weights()` can read -- it would
+# log "no LoRA keys found" and silently serve the base model. Inject via peft.
+from dptlab.training.peft_methods import load_peft_checkpoint  # pip install dptlab
+
+pipe = DiffusionPipeline.from_pretrained("{base_model_id}", torch_dtype=torch.bfloat16).to("cuda")
+denoiser = pipe.unet if hasattr(pipe, "unet") else pipe.transformer
+load_peft_checkpoint(pipe, denoiser, snapshot_download("{repo_id}"), "{peft_method}", for_training=False)
+
+image = pipe(prompt="your prompt here", num_inference_steps={steps}, guidance_scale={guidance}).images[0]"""
 
 _LICENSE_BY_MODEL_KEY = {
     "sdxl": "openrail++",
     "flux-schnell": "apache-2.0",
     "flux-dev": "other",  # FLUX.1-dev non-commercial license — flag explicitly
+    "flux2-klein-4b": "apache-2.0",
+    "flux2-klein-9b": "apache-2.0",
 }
 
 
 def build_model_card(manifest: dict, repo_id: str, eval_report: dict | None) -> str:
+    from dptlab.models.registry import get_model_spec
+    from dptlab.training.peft_methods import get_method_spec
+
     config = manifest["config"]
     model_key = config["model_key"]
+    peft_method = manifest.get("peft_method") or config.get("peft_method", "lora")
+    spec = get_model_spec(model_key)
 
     if eval_report:
         benchmark_section = (
@@ -83,13 +117,30 @@ def build_model_card(manifest: dict, repo_id: str, eval_report: dict | None) -> 
     else:
         benchmark_section = "_Not yet benchmarked — run `dptlab eval` and re-push to fill this in._"
 
+    trainable = manifest.get("trainable_parameters")
+    trainable_line = (
+        f"Trainable parameters: **{trainable / 1e6:.1f}M**." if trainable else ""
+    )
+
+    usage_template = _LORA_USAGE if get_method_spec(peft_method).diffusers_native else _PEFT_USAGE
+    usage_snippet = usage_template.format(
+        base_model_id=_base_model_id(model_key),
+        repo_id=repo_id,
+        peft_method=peft_method,
+        steps=spec.default_inference_steps,
+        guidance=spec.default_guidance_scale,
+    )
+
     return _MODEL_CARD_TEMPLATE.format(
         license=_LICENSE_BY_MODEL_KEY.get(model_key, "other"),
         base_model_id=_base_model_id(model_key),
         recipe=config["recipe"],
+        peft_method=peft_method,
+        trainable_line=trainable_line,
         repo_name=repo_id.split("/")[-1],
         config_json=json.dumps(config, indent=2),
         benchmark_section=benchmark_section,
+        usage_snippet=usage_snippet,
         repo_id=repo_id,
     )
 
@@ -120,11 +171,14 @@ def main() -> None:
 
     api = HfApi()
     api.create_repo(args.repo_id, repo_type="model", private=args.private, exist_ok=True)
-    api.upload_file(
-        path_or_fileobj=str(Path(args.checkpoint) / "lora_weights.safetensors"),
-        path_in_repo="lora_weights.safetensors",
-        repo_id=args.repo_id,
-    )
+
+    # Upload whichever weight files this method actually produced, plus the
+    # adapter_config.json that peft needs to rebuild the right layer type.
+    for name in ("lora_weights.safetensors", "adapter_model.safetensors", "adapter_config.json"):
+        path = Path(args.checkpoint) / name
+        if path.exists():
+            api.upload_file(path_or_fileobj=str(path), path_in_repo=name, repo_id=args.repo_id)
+
     api.upload_file(
         path_or_fileobj=str(Path(args.checkpoint) / "run_manifest.json"),
         path_in_repo="run_manifest.json",
