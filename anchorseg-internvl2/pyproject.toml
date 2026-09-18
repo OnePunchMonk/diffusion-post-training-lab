@@ -8,7 +8,10 @@ license = { text = "MIT" }
 dependencies = [
     "numpy>=1.26",
     "pillow>=10.0",
-    "pycocotools>=2.0.7",   # polygon -> mask rasterization, same path the annotations assume
+    # Mask construction must match LISA's get_mask_from_json exactly, which
+    # paints polygons with cv2.polylines + cv2.fillPoly (inclusive outline).
+    # A different rasterizer is a different ground truth, not a stricter one.
+    "opencv-python-headless>=4.9",
     "pyyaml>=6.0",
     "huggingface-hub>=0.24",
     "tqdm>=4.66",

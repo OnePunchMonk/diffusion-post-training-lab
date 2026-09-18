@@ -31,9 +31,10 @@ def test_half_overlap():
 def test_empty_prediction_on_empty_target_scores_one():
     """Correct abstention must not be punished.
 
-    ReasonSeg val has no empty targets, but the false-premise variants do, and
-    scoring this as 0 would make a model that correctly refuses to segment a
-    non-existent object look worse than one that hallucinates a mask.
+    The reference does this explicitly: `acc_iou[union_i == 0] += 1.0`. Four of
+    ReasonSeg val's 200 samples carry no shapes at all, so this convention is
+    worth 2% of gIoU on the split the replication is judged on -- more than the
+    tolerance itself.
     """
     empty = np.zeros((10, 10), dtype=bool)
     assert single_iou(empty, empty)[0] == pytest.approx(1.0)
@@ -82,6 +83,45 @@ def test_missing_prediction_counts_as_empty_not_skipped():
     assert complete.giou == pytest.approx(1.0)
     assert truncated.giou == pytest.approx(0.5)
     assert missing_predictions({"a": box()}, targets) == ["b"]
+
+
+def test_ignore_pixels_are_excluded_from_both_intersection_and_union():
+    """The reference passes ignore_index=255; ignore is not background.
+
+    A prediction that falls entirely inside the ignore region must be a no-op,
+    not a false positive.
+    """
+    target = box(20, 20, 0, 5, 0, 5)
+    ignore = box(20, 20, 10, 15, 10, 15)
+
+    pred_clean = target.copy()
+    pred_with_ignored_extra = target | ignore
+
+    assert single_iou(pred_clean, target, ignore)[0] == pytest.approx(1.0)
+    assert single_iou(pred_with_ignored_extra, target, ignore)[0] == pytest.approx(1.0)
+    # Without the ignore mask the same prediction is punished as a false positive.
+    assert single_iou(pred_with_ignored_extra, target)[0] < 0.6
+
+
+def test_ignore_can_make_a_sample_empty_and_therefore_score_one():
+    """If ignore covers the whole target, union is 0 and the sample scores 1.0
+    rather than dividing by zero."""
+    target = box(20, 20, 0, 5, 0, 5)
+    assert single_iou(target, target, ignore=target)[0] == pytest.approx(1.0)
+
+
+def test_ignore_shape_mismatch_raises():
+    with pytest.raises(ValueError, match="shape mismatch"):
+        single_iou(box(), box(), ignore=np.zeros((4, 4), dtype=bool))
+
+
+def test_compute_scores_threads_ignores_through():
+    targets = {"a": box(20, 20, 0, 5, 0, 5)}
+    ignores = {"a": box(20, 20, 10, 15, 10, 15)}
+    predictions = {"a": targets["a"] | ignores["a"]}
+
+    assert compute_scores(predictions, targets, ignores=ignores).giou == pytest.approx(1.0)
+    assert compute_scores(predictions, targets).giou < 0.6
 
 
 def test_query_type_breakdown():
