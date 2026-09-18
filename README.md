@@ -301,6 +301,20 @@ checkpoint](#serving-a-post-trained-checkpoint). The `PromptRewriter` in that
 file (a small LLM served by vLLM to rewrite prompts) is still a reasonable use
 of vLLM proper alongside a diffusion server.
 
+## Subprojects
+
+[`anchorseg-internvl2/`](anchorseg-internvl2/) — replicating
+[AnchorSeg](https://arxiv.org/abs/2604.18562) (ACL 2026), the current state of
+the art on ReasonSeg reasoning segmentation, then porting the method from its
+LLaVA backbone to InternVL2. A VLM emits segmentation tokens whose hidden
+states are projected into SAM's prompt space; SAM's decoder produces the mask
+and gradients flow back through it.
+
+It is **self-contained** — no shared code with `dptlab`, different models,
+different task, different eval — so it has its own `pyproject.toml`, virtualenv
+and tests. Install it from inside that directory. It lives here for
+convenience, not because it reuses anything.
+
 ## Repo layout
 
 ```
@@ -327,6 +341,7 @@ scripts/
   push_to_hub.py                # publish a checkpoint + model card to the Hub
   update_models_md.py           # record its benchmark row in MODELS.md
 tests/
+anchorseg-internvl2/            # subproject: AnchorSeg replication -> InternVL2 port
 flux2-klein-peft/               # the FLUX.2 [klein] PEFT benchmark (own README)
   learning-doc.md                 why it's built this way
   configs/                        one per PEFT method

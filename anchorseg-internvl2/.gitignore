@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Downloaded or produced, never committed. Anchored with a leading slash so
+# they match only these top-level directories -- an unanchored `data/` also
+# matches `src/asvl/data/`, which silently drops a source package from the
+# commit while every local test keeps passing.
+/data/
+/upstream/
+/weights/
+/runs/
+/outputs/
+*.pth
+*.safetensors
