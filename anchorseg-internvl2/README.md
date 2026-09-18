@@ -30,7 +30,7 @@ cIoU 75.15**.
 
 | Step | What | Status |
 |---|---|---|
-| 1 | Reproduce the **eval** from released weights — no training | harness built, not run |
+| 1 | Reproduce the **eval** from released weights — no training | data verified, GPU run pending |
 | 2 | Reproduce the **training** on LLaVA-1.5-7B | not started |
 | 3 | Port the method to an **InternVL2** backbone | not started |
 | 4 | Full fine-tune vs. LoRA ablation on the InternVL2 variant | not started |
@@ -48,14 +48,18 @@ disagreement between their implementation and the paper's stated definition
 would cancel on both sides and stay invisible. An independent implementation is
 what makes a matching number evidence.
 
-Same reasoning for `src/asvl/data/reasonseg.py`: the ground-truth masks are
-rasterized here from the annotation polygons, with three details that each
-change the score and none of which are obvious from the format —
-`"ignore"`-labelled shapes are *subtracted* rather than added, multiple
-`"target"` polygons union into one object, and the canvas size must come from
-the image because the JSON's `imageHeight`/`imageWidth` are null.
+Same reasoning for `src/asvl/data/reasonseg.py`, and it has already paid for
+itself. Running `scripts/check_ground_truth.py` on the real split surfaced 5
+empty masks out of 200; reading LISA's `get_mask_from_json` afterwards showed
+**four** mismatches with the reference — the mask is trinary (ignore is `255`,
+excluded from intersection *and* union, not background); polygons are painted
+largest-area-first so a small target inside a large ignore stays a target;
+`flag` shapes are dropped as deprecated; and the outline is painted inclusively,
+a percent-level IoU difference on a split whose median target is 6% of the frame.
 
-Both are numpy-only and tested without a GPU or a model download.
+Every one of those is silent, and every one would have surfaced three steps
+later as "our InternVL2 port underperforms". That is the argument for doing
+step 1 first. Details in [`docs/learning-doc.md`](docs/learning-doc.md).
 
 ## Quickstart
 

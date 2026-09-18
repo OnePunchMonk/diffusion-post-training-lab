@@ -87,41 +87,63 @@ gIoU but matches cIoU, the gap is concentrated in small objects — which points
 at mask resolution or rasterization, *not* at the model. `pins.verdict()`
 encodes that inference so the reader doesn't have to rederive it.
 
-### Conventions that change the number
+### What actually happened: I got the ground truth wrong
 
-1. **Empty prediction on empty ground truth scores IoU 1.0.** ReasonSeg val has
-   no empty targets, but false-premise variants do. Scoring it 0 punishes
-   correct abstention.
-2. **Masks are compared at full image resolution.** Predictions come back at
-   SAM's 1024px and must be resized *up*. Downsampling the ground truth instead
-   quietly shrinks the penalty for boundary error. `single_iou` raises on a
-   shape mismatch rather than silently resizing, because a silent resize is how
-   an entire eval ends up scored at the wrong resolution.
-3. **Missing predictions are scored as empty, not skipped.** Otherwise a job
-   that crashed after its 50 easiest images reports a *better* number than one
-   that finished.
+The first version of this repo reasoned about the annotation format from first
+principles and wrote what seemed obviously right: union the `target` polygons,
+subtract the `ignore` polygons, rasterize with pycocotools because PIL's
+inclusive outline adds a spurious one-pixel border.
 
-### Rasterization details that change the number
+Then `scripts/check_ground_truth.py` ran on the real split and reported **5
+empty masks out of 200**. Reading LISA's `get_mask_from_json` afterwards showed
+four separate mismatches with the reference — each silent, each of which would
+have surfaced later as a modelling gap and been debugged as one:
 
-The annotations are LabelMe-style. Three traps:
+| | I had | Reference | Consequence |
+|---|---|---|---|
+| Mask values | binary | **trinary** — 0 bg, 1 target, **255 ignore** | Eval passes `ignore_index=255`; ignore pixels leave *both* intersection and union. As background, a prediction there is a false positive instead of a no-op. |
+| Combination | union targets, subtract ignores | **painter's algorithm, largest area first** | A small target inside a large ignore ends up as *target*, painted second. Subtracting erases it — this emptied sample `914980029`, whose target covers 31828 px. |
+| `flag` label | treated as a target | **dropped** ("meaningless deprecated annotations") | 62 occurrences in val. Mine survived only because all 62 have fewer than 3 points, so the degenerate-shape guard caught them by luck. |
+| Boundary | pycocotools RLE, exclusive | `cv2.polylines` **then** `cv2.fillPoly` — **inclusive** | ~1px border. With a median target area of 6% of the frame, that is percent-level IoU — comparable to the gap between published methods. |
 
-- **`"ignore"`-labelled shapes are subtracted, not added.** Unioning them
-  inflates the ground-truth area, which *raises* IoU for an over-segmenting
-  model — a broken replication that looks closer to the paper than it is.
-- **Multiple `"target"` polygons are one object.** ReasonSeg targets are often
-  disconnected (seen through railings, split by an occluder).
-- **Canvas size must come from the image.** `imageHeight`/`imageWidth` are null
-  in this release; deriving the size from the polygon extent crops every mask
-  to its own bounding box.
+The fourth is the instructive one. My original note argued pycocotools was
+*more correct* than PIL's inclusive fill. Wrong frame: there is no more-correct
+rasterizer here. The ground truth is whatever the reference paints, and a
+stricter one is a **different benchmark**, not a better-measured one.
 
-And: rasterize via pycocotools RLE, not `PIL.ImageDraw.polygon`. The two
-disagree on boundary pixels — PIL fills the outline inclusively, adding roughly
-a one-pixel border. On ReasonSeg's many small targets that's a percent-level
-IoU difference, comparable to the gap between published methods.
+This is the entire argument for step 1, in one finding. Every one of these bugs
+is silent, and every one would have surfaced as "our InternVL2 port
+underperforms" three steps and several hundred dollars later.
 
-`scripts/check_ground_truth.py` runs these checks before any model is involved,
-including an optional cross-check against `Ricky06662/ReasonSeg_val`, an
-independently pre-rasterized copy of the same split.
+### What the real split looks like
+
+```
+samples              200
+empty masks          4         <- genuinely shapeless annotations
+target area          median 0.064   p10 0.005   p90 0.304
+ignore regions       76 samples, mean area 0.024
+query types          long 113, short 87
+queries per sample   1.72
+```
+
+- **Small objects dominate.** Median target is 6% of the frame, p10 is 0.5%.
+  This is why gIoU and cIoU diverge, and why a boundary-level rasterization
+  difference is not a rounding error.
+- **The 4 empty targets are worth 2.0 points of gIoU.** Under the reference's
+  `acc_iou[union_i == 0] += 1.0`, a model scores 1.0 on each by predicting
+  nothing — *larger than the ±1.0 tolerance* the replication is judged against.
+  Whether an implementation honours that convention decides the verdict alone.
+
+### Conventions the tests pin
+
+- **Ignore excluded from both intersection and union**, per `ignore_index=255`.
+- **Empty-on-empty scores IoU 1.0**, per `acc_iou[union_i == 0] += 1.0`.
+- **Masks compared at full image resolution.** `single_iou` raises on a shape
+  mismatch rather than silently resizing — a silent resize is how an entire eval
+  ends up scored at SAM's 1024px, understating boundary error.
+- **Missing predictions score as empty, not skipped.** Otherwise a job that
+  crashed after its 50 easiest images reports a *better* number than one that
+  finished.
 
 ## 4. The plan, and why this order
 
