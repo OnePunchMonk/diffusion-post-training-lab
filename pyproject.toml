@@ -7,10 +7,12 @@ requires-python = ">=3.10"
 license = { text = "MIT" }
 dependencies = [
     "torch>=2.2",
-    "diffusers>=0.30",
+    # FLUX.2 [klein] needs Flux2KleinPipeline / AutoencoderKLFlux2.
+    "diffusers>=0.39",
     "transformers>=4.44,<5",
     "accelerate>=0.33",
-    "peft>=0.12",
+    # LoHa/LoKr/OFT/BOFT configs and their merge() implementations.
+    "peft>=0.14",
     "safetensors>=0.4",
     "pyyaml>=6.0",
     "pillow>=10.0",
@@ -22,7 +24,17 @@ dependencies = [
 [project.optional-dependencies]
 train = ["bitsandbytes>=0.43", "xformers>=0.0.27", "datasets>=2.20", "wandb>=0.17"]
 eval = ["scipy>=1.13", "torchmetrics>=1.4", "open-clip-torch>=2.26"]
-serve = ["modal>=0.64", "fastapi>=0.111"]  # optional: only needed for the reference Modal serving example
+# Optional DreamBench++ LLM judge -- the embedding metrics in `eval` work without it.
+judge = ["anthropic>=0.40"]
+# InternVL2 captioning + SAM masking. sentencepiece/timm are InternVL2's
+# remote-code dependencies and are not pulled in by transformers itself.
+label = ["datasets>=2.20", "sentencepiece>=0.2", "timm>=1.0", "torchvision>=0.17"]
+# NVFP4/FP8 post-training quantization. Blackwell for native NVFP4 kernels.
+quant = ["nvidia-modelopt[torch]>=0.21"]
+# Reference Modal endpoint. The SGLang / vLLM-Omni backends in serve/backends.py
+# are launched as subprocesses and deliberately not pinned here: they carry
+# CUDA/kernel/driver constraints that have no business gating `pip install dptlab`.
+serve = ["modal>=0.64", "fastapi>=0.111"]
 dev = ["pytest>=8.0", "ruff>=0.5", "mypy>=1.10"]
 
 [project.scripts]
@@ -40,4 +52,4 @@ line-length = 100
 target-version = "py310"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "flux2-klein-peft/tests"]

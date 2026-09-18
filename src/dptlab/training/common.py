@@ -30,6 +30,16 @@ class TrainConfig:
     max_train_steps: int = 2000
     lora_rank: int = 16
     lora_alpha: int = 16
+    # Which PEFT adapter family to inject. See training/peft_methods.py for the
+    # registry; "lora" reproduces the original behaviour of this repo.
+    peft_method: str = "lora"
+    # Orthogonal methods (OFT/BOFT) take much larger effective steps early on
+    # than LoRA at the same LR; clipping keeps the six-method sweep comparable
+    # without per-method LR tuning.
+    max_grad_norm: float = 1.0
+    # Weight the denoising loss toward the subject using masks written by
+    # scripts/autolabel.py. No-op if the dataset has no mask column.
+    use_masks: bool = False
     mixed_precision: str = "bf16"
     seed: int = 42
     checkpointing_steps: int = 500
@@ -151,7 +161,7 @@ def save_lora_checkpoint(pipe, denoiser, out_dir: str | Path, filename: str = "l
         type(pipe).save_lora_weights(transformer_lora_layers=state_dict, **save_kwargs)
 
 
-def load_lora_checkpoint(pipe, denoiser, weights_path: str | Path) -> None:
+def load_lora_checkpoint(pipe, denoiser, weights_path: str | Path, for_training: bool = True) -> None:
     """Resume from a checkpoint saved by `save_lora_checkpoint`.
 
     Uses `pipe.load_lora_weights()` (diffusers' own loader, which injects
@@ -163,7 +173,8 @@ def load_lora_checkpoint(pipe, denoiser, weights_path: str | Path) -> None:
     this *instead of* `add_lora_adapter`, not after it.
     """
     pipe.load_lora_weights(str(weights_path))
-    _finalize_trainable_adapter(denoiser)
+    if for_training:
+        _finalize_trainable_adapter(denoiser)
 
 
 def encode_conditioning(pipe, captions: list[str], resolution: int) -> tuple:

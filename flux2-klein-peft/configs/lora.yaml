@@ -1,0 +1,47 @@
+# LORA on FLUX.2 [klein] 4B.
+#
+# Baseline. The only method whose checkpoint loads into a stock diffusers
+# pipeline with no dptlab code -- worth remembering when comparing portability
+# and not just scores.
+#
+# Shared settings for the FLUX.2 [klein] PEFT-method sweep.
+#
+# Everything here is held fixed across the six methods so the only variable is
+# the adapter. The per-method files override `peft_method` and, where a method
+# is parameterized differently (block size rather than rank), the knobs needed
+# to land near the same trainable-parameter budget -- see MODELS.md for the
+# measured counts.
+recipe: lora
+model_key: flux2-klein-4b
+dataset_path: data/syncd-20/subject-0
+output_dir: outputs/peft/lora
+
+# 512 rather than klein's native 1024: subject identity is carried by shape and
+# colour, both of which survive the downscale, and the latent sequence is 4x
+# shorter. That is the single biggest lever on sweep cost, and it applies
+# equally to all six methods, so it doesn't bias the comparison.
+resolution: 512
+
+learning_rate: 1.0e-4
+train_batch_size: 1
+gradient_accumulation_steps: 4
+max_train_steps: 500
+mixed_precision: bf16
+seed: 42
+checkpointing_steps: 250
+max_grad_norm: 1.0
+
+# Weight the loss toward the SAM subject mask if scripts/autolabel.py has run.
+# Harmless when the dataset has no masks.
+use_masks: true
+
+# Rectified-flow timestep sampling. `sampling_steps_for_shift` must match the
+# step count used at eval (klein is distilled to 4) so the training sigma
+# distribution lines up with the sampling one.
+sampling_steps_for_shift: 4
+logit_mean: 0.0
+logit_std: 1.0
+
+peft_method: lora
+lora_rank: 16
+lora_alpha: 16
