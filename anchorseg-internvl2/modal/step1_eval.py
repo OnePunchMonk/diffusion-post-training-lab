@@ -6,9 +6,10 @@ flash-attn 2.6.3 -- and building it is the part most likely to fail. Failing
 that on a $2/hour A100 while it downloads 18GB of weights is the expensive way
 to find out, so the work is split into functions you can run in order:
 
-  modal run modal/step1_eval.py::probe     # CPU, ~free: does the image build and import?
-  modal run modal/step1_eval.py::fetch     # CPU: pull weights into the volume, once
-  modal run modal/step1_eval.py::evaluate  # A100: the actual run
+  modal run modal/step1_eval.py::probe      # CPU, ~free: does the image build and import?
+  modal run modal/step1_eval.py::probe_gpu  # A10G, seconds: does the entry point import?
+  modal run modal/step1_eval.py::fetch      # CPU: pull weights into the volume, once
+  modal run modal/step1_eval.py::evaluate   # A100: the actual run
 
 Each stage caches into a Modal volume, so a failure in one doesn't re-do the
 previous one.
@@ -113,15 +114,25 @@ def probe() -> dict:
 
     report: dict = {"container_python": sys.version.split()[0]}
 
+    # `UGround` is the *distribution* name in their setup.py; find_packages()
+    # exposes the top-level packages train_ds.py actually imports (model,
+    # dataloaders, utils). Probing for a module called UGround tests nothing
+    # and reports a failure that looks like a broken environment.
     probe_src = (
         "import json,sys\n"
+        "import importlib.metadata as md\n"
         "out={'upstream_python': sys.version.split()[0]}\n"
-        "for m in ('torch','transformers','peft','deepspeed','flash_attn','cv2','UGround'):\n"
+        "for m in ('torch','transformers','peft','deepspeed','flash_attn','cv2',\n"
+        "          'model','dataloaders'):\n"
         "    try:\n"
         "        mod=__import__(m)\n"
         "        out[m]=getattr(mod,'__version__','imported')\n"
         "    except Exception as e:\n"
         "        out[m]='FAILED: %s: %s' % (type(e).__name__, e)\n"
+        "try:\n"
+        "    out['UGround_dist']=md.version('UGround')\n"
+        "except Exception as e:\n"
+        "    out['UGround_dist']='FAILED: %s' % e\n"
         "print(json.dumps(out))\n"
     )
     proc = subprocess.run([UGROUND_PY, "-c", probe_src], capture_output=True, text=True, cwd=CODE)
@@ -136,9 +147,60 @@ def probe() -> dict:
     report["upstream_commit"] = commit.stdout.strip()
     report["commit_matches_pin"] = commit.stdout.strip() == UPSTREAM_COMMIT
 
-    parse_check = f"import ast; ast.parse(open('{CODE}/train_ds.py').read())"
-    entrypoint = subprocess.run([UGROUND_PY, "-c", parse_check], capture_output=True, text=True)
-    report["train_ds_parses"] = entrypoint.returncode == 0
+    # The definitive environment check: does the entry point's whole import
+    # graph resolve? Guessing at individual module names proves nothing --
+    # `utils` and `UGround` both look like packages and neither exists. Running
+    # --help reaches argparse only if every import above it succeeded.
+    entrypoint = subprocess.run(
+        [UGROUND_PY, "train_ds.py", "--help"], capture_output=True, text=True, cwd=CODE, timeout=600
+    )
+    report["train_ds_imports"] = entrypoint.returncode == 0
+    if entrypoint.returncode != 0:
+        report["train_ds_error"] = entrypoint.stderr.strip().splitlines()[-1][:300]
+
+    for key, value in report.items():
+        print(f"{key:<22} {value}")
+    return report
+
+
+@app.function(image=image, volumes={CACHE: cache}, gpu="A10G", timeout=900)
+def probe_gpu() -> dict:
+    """The part of the environment check that needs a device.
+
+    `train_ds.py` initializes CUDA during import, so its import graph cannot be
+    exercised on CPU -- the CPU probe fails with "Found no NVIDIA driver",
+    which says nothing about the environment. A10G rather than T4 because
+    flash-attn 2 requires Ampere or newer; on T4 it would fail for a reason
+    that has nothing to do with whether this stack is correctly built.
+
+    A10G rather than A100 because this check is seconds long and needs a valid
+    architecture, not capacity. The eval itself still wants A100 memory.
+    """
+    import json
+    import subprocess
+
+    report: dict = {}
+
+    gpu_src = (
+        "import json,torch\n"
+        "print(json.dumps({'cuda': torch.cuda.is_available(),\n"
+        "                  'device': torch.cuda.get_device_name(0),\n"
+        "                  'capability': list(torch.cuda.get_device_capability(0)),\n"
+        "                  'torch_cuda': torch.version.cuda}))\n"
+    )
+    proc = subprocess.run([UGROUND_PY, "-c", gpu_src], capture_output=True, text=True, cwd=CODE)
+    if proc.returncode == 0 and proc.stdout.strip():
+        report.update(json.loads(proc.stdout.strip().splitlines()[-1]))
+    else:
+        report["cuda"] = f"FAILED rc={proc.returncode}: {proc.stderr[-500:]}"
+
+    entrypoint = subprocess.run(
+        [UGROUND_PY, "train_ds.py", "--help"], capture_output=True, text=True, cwd=CODE, timeout=600
+    )
+    report["train_ds_imports"] = entrypoint.returncode == 0
+    if entrypoint.returncode != 0:
+        tail = entrypoint.stderr.strip().splitlines()
+        report["train_ds_error"] = tail[-1][:300] if tail else "no stderr"
 
     for key, value in report.items():
         print(f"{key:<22} {value}")
@@ -216,4 +278,4 @@ def main() -> None:
     never accidentally starts a GPU job."""
     print("Probing the upstream environment (CPU only)...\n")
     probe.remote()
-    print("\nNext: modal run modal/step1_eval.py::fetch   (CPU, ~18GB into the volume)")
+    print("\nNext: modal run modal/step1_eval.py::probe_gpu   (A10G, seconds)")
