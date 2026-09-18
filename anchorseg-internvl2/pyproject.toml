@@ -1,0 +1,38 @@
+[project]
+name = "asvl"
+version = "0.1.0"
+description = "Replication of AnchorSeg (ACL 2026) reasoning segmentation, then a port of the method to an InternVL2 backbone."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.26",
+    "pillow>=10.0",
+    "pycocotools>=2.0.7",   # polygon -> mask rasterization, same path the annotations assume
+    "pyyaml>=6.0",
+    "huggingface-hub>=0.24",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+# Only needed to actually run a model; the data + metric layers are numpy-only
+# on purpose, so they can be tested without a GPU or a 14GB download.
+model = ["torch>=2.2", "transformers>=4.44", "accelerate>=0.33", "peft>=0.14", "deepspeed>=0.14"]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/asvl"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
