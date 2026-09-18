@@ -1,7 +1,7 @@
 # dptlab — Diffusion Post-Training Lab
 
-Post-train open-weight text-to-image diffusion models (SDXL, FLUX) with four
-recipes, evaluate them with a shared harness, and publish each checkpoint to
+Post-train open-weight text-to-image diffusion models (SDXL, FLUX, FLUX.2
+[klein]) with four recipes and six PEFT methods, evaluate them with a shared harness, and publish each checkpoint to
 the [Hugging Face Hub](https://huggingface.co) with an auto-generated model
 card. [`MODELS.md`](MODELS.md) is the running leaderboard: every pushed
 checkpoint gets a benchmarked row. Built as a from-scratch study of the
@@ -93,6 +93,177 @@ dptlab eval --checkpoint outputs/dpo-sdxl/final \
     --prompts prompts/geneval_mini.jsonl
 ```
 
+## PEFT-method benchmark on FLUX.2 [klein]
+
+The recipes above vary the *objective* (denoising, preference, RL,
+distillation) while holding the adapter fixed at LoRA. This benchmark varies
+the other axis: same objective, same data, same budget, six different PEFT
+adapters on [FLUX.2 [klein] 4B](https://huggingface.co/black-forest-labs/FLUX.2-klein-4B)
+(Apache-2.0, ~13GB in bf16, step- and guidance-distilled to 4 steps).
+
+| Method | Update | Config |
+|---|---|---|
+| **LoRA** | `W + BA`, rank r | `flux2-klein-peft/configs/lora.yaml` |
+| **DoRA** | LoRA + a learned per-column magnitude | `.../dora.yaml` |
+| **LoHa** | Hadamard product of two low-rank pairs — higher effective rank per parameter | `.../loha.yaml` |
+| **LoKr** | Kronecker factorization — smallest checkpoints of the six | `.../lokr.yaml` |
+| **OFT** | Block-diagonal *orthogonal* transform of the output space | `.../oft.yaml` |
+| **BOFT** | Butterfly-factorized OFT — denser transform, fewer parameters | `.../boft.yaml` |
+
+Everything lives in [`flux2-klein-peft/`](flux2-klein-peft/) (which has its own
+README) except the importable modules, which stay in the `dptlab` package next
+to the code they extend.
+
+`peft_method` is one line of YAML; `training/peft_methods.py` owns everything
+that differs between them (which config field the rank knob maps to, which
+modules each can legally be injected into, and which checkpoint format it must
+be saved in). The training loop itself is method-agnostic.
+
+### Use case and dataset
+
+**Subject-driven personalization**: given a few photos of one specific object,
+teach the model that object so it can be re-rendered in unseen contexts. It is
+the right probe for this comparison because its two failure modes are opposite
+and both measurable — too little capacity and the subject doesn't stick, too
+much and the adapter memorizes the training shots and stops following the
+prompt. A method only wins if it moves both.
+
+- **Train:** [SynCD](https://huggingface.co/datasets/nupurkmr9/syncd)
+  (Kumari et al., *Generating Multi-Image Synthetic Data for Text-to-Image
+  Customization*, ICCV 2025; MIT). ~90k objects × 2-3 images, each object shot
+  under different lighting, background and pose. That multi-view property is
+  what makes it sharper than a single-shoot dataset: background and pose are
+  already decorrelated from identity in the data, so whatever identity leakage
+  remains is attributable to the adapter. Training caption is the object's
+  `category_description`.
+- **Evaluate:** each object's `prompts` — the same object in contexts the
+  adapter never saw — scored on two axes that point in opposite directions:
+
+  | Axis | Metric | Question |
+  |---|---|---|
+  | Subject fidelity | **DINO** (primary), CLIP-I | Is it *this* object, not just this category? |
+  | Prompt fidelity | **CLIPScore** | Did it follow the new context? |
+  | Both, human-aligned | **DreamBench++** CP / PF, 0-4 | (opt-in, costs money) |
+
+  The [DreamBench++](https://huggingface.co/papers/2406.16855) judge (Peng et
+  al., ICLR 2025) fetches the authors' published rubrics and scores concept
+  preservation and prompt following separately. Two deliberate deviations: it
+  runs **Claude**, not the paper's GPT-4o, so absolute scores are not
+  comparable to published numbers — only rankings *within one sweep* are; and
+  it asks for reasoning in the response rather than via assistant prefill.
+
+### Running it
+
+```bash
+# 1. data — one archive (~1.8GB), sliced to 20 subjects
+python flux2-klein-peft/scripts/prepare_syncd.py --num-subjects 20 --out data/syncd-20
+
+# 2. optional: InternVL2 captions + SAM subject masks (see below)
+python flux2-klein-peft/scripts/autolabel.py --dataset data/syncd-20/subject-0 --class-name "flip flops"
+
+# 3. sweep — resumable, skips completed (method, subject) cells
+python flux2-klein-peft/scripts/sweep_peft.py --data-root data/syncd-20 --out runs/klein-peft
+
+# 4. table for MODELS.md (add --judge in step 3 for CP/PF columns)
+python flux2-klein-peft/scripts/sweep_peft.py --data-root data/syncd-20 --out runs/klein-peft --report-only
+```
+
+Results are written one row per `(method, subject)` cell and only aggregated at
+report time, with a standard deviation across subjects. Per-subject variance on
+3-image subjects is large, and a table of bare means is how a difference smaller
+than the noise gets written up as a win.
+
+### Auto-labeling: InternVL2 + SAM
+
+`flux2-klein-peft/scripts/autolabel.py` runs two models over a prepared dataset. Both are *data
+tooling* — they run once, on CPU or a small GPU, and only their output reaches
+training.
+
+- **InternVL2** rewrites each caption to describe the *context* (surface,
+  lighting, background) while leaving the subject to the rare token. Without
+  it every image of a subject shares one caption, so nothing but the token
+  explains the background and the adapter is free to entangle the two.
+- **SAM** segments the subject. Used twice: to weight the training loss toward
+  the subject (`use_masks: true`), and to composite references onto a neutral
+  background before DINO scoring, so subject fidelity measures the object
+  rather than a shared backdrop.
+
+### What FLUX.2 needed that SDXL didn't
+
+`training/objectives.py` exists because the two families disagree about
+essentially every part of a training step, and the differences are the silent
+kind — each one trains, converges, and produces nothing useful:
+
+- **Rectified flow, not DDPM.** `x_t = (1-σ)x₀ + σε`, target `ε - x₀`, with σ
+  drawn logit-normal and pushed through the same resolution-dependent shift the
+  sampler applies (`compute_empirical_mu`), so training and sampling see the
+  same noise-level distribution.
+- **Latents are packed tokens.** 2×2-patchified, standardized by running
+  batch-norm statistics stored on the VAE (*not* a scalar `scaling_factor` —
+  skipping this leaves latents several σ off-distribution), then flattened to a
+  sequence with 4D position ids for image and text tokens.
+- **One Qwen3 text encoder**, no pooled embedding, no `added_cond_kwargs`.
+- **No guidance at inference.** klein is distilled to 4 steps at cfg 1.0;
+  serving it at SDXL's 30 steps / cfg 7.0 is 7× slower and washed out. The
+  sampling defaults now come from the `ModelSpec` rather than being hardcoded.
+
+FLUX.1 is deliberately left *unregistered* in `objectives.py`: it is also
+rectified flow, but with a different text stack and latent packing, and running
+the DDPM path on it would train quietly and produce nothing.
+
+## Serving a post-trained checkpoint
+
+`src/dptlab/serve/backends.py` builds launch commands for
+[SGLang Diffusion](https://docs.sglang.io/docs/sglang-diffusion) (day-0 FLUX.2
+support, step-level continuous batching, OpenAI-compatible endpoint) and
+[vLLM-Omni](https://github.com/vllm-project/vllm-omni) (vLLM's diffusion
+module; its FLUX.2 recipes and diffusion-LoRA support were still landing
+upstream at the time of writing).
+
+The load-bearing constraint: **no inference server loads a non-LoRA PEFT
+adapter.** Both backends expect base weights or a LoRA-shaped delta, so a LoHa /
+LoKr / OFT / BOFT checkpoint either fails to load or — worse — loads nothing and
+silently serves the base model. `flux2-klein-peft/scripts/merge_and_export.py` folds any adapter
+into the transformer and writes an ordinary diffusers directory that every
+backend can serve:
+
+```bash
+python flux2-klein-peft/scripts/merge_and_export.py \
+    --checkpoint runs/klein-peft/oft/subject-0/ckpt/final \
+    --out exports/klein-oft-subject-0
+
+python -c "from dptlab.serve.backends import build_serve_spec; \
+           print(build_serve_spec('sglang', 'exports/klein-oft-subject-0').render())"
+```
+
+That asymmetry is itself a benchmark result, and one the score table won't
+show: LoRA serves as a few MB of delta, hot-swappable per request; every other
+method costs a full model copy per subject. If two methods tie on quality, that
+difference decides which one you would actually deploy.
+
+### NVFP4 quantization
+
+`flux2-klein-peft/scripts/quantize_nvfp4.py` quantizes a merged export to NVFP4 (16-element
+weight blocks with per-block FP8 scales; native on Blackwell, ~1.7x end-to-end
+on FLUX) or FP8/INT8, via diffusers' `NVIDIAModelOptConfig`.
+
+Quantize **after** merging, never before: a PEFT adapter is a delta against the
+base weights it was fitted to, so quantizing the base shifts those weights
+underneath it, and quantizing the adapter's own low-rank factors wrecks them.
+Post-merge the question disappears — there's no adapter left — and the same
+path works for all six methods.
+
+```bash
+python flux2-klein-peft/scripts/quantize_nvfp4.py --model exports/klein-oft-s0 \
+    --out exports/klein-oft-s0-nvfp4 --eval-subject data/syncd-20/subject-0
+```
+
+`--eval-subject` re-runs DINO/CLIP-T on the quantized model and prints deltas
+against bf16 — *does a 4-bit subject adapter still hold the subject?* is the
+question that decides whether the sweep's winner survives deployment. On
+pre-Blackwell hardware the script says so: NVFP4 weights still dequantize in
+software there, so you get the ~4x memory saving and none of the speed.
+
 ## Publishing: Hugging Face Hub, not a hosted endpoint
 
 Rather than standing up a Modal endpoint that only works while your account
@@ -115,31 +286,37 @@ python scripts/update_models_md.py --repo-id OnePunchMonk/dptlab-sdxl-dpo-v1 \
 ```
 
 See [`MODELS.md`](MODELS.md) for the leaderboard this produces and the full
-publish loop.
+publish loop, and [`learning-doc.md`](flux2-klein-peft/learning-doc.md) for the reasoning behind
+the FLUX.2 / PEFT / quantization work — including the failure modes that don't
+raise.
 
 ### Optional: Modal serving reference
 
 `src/dptlab/serve/modal_app.py` is kept as a reference implementation for
 anyone who *does* want a live endpoint (`modal deploy src/dptlab/serve/modal_app.py`),
-loading checkpoints straight from the Hub instead of a Modal volume. It also
-carries a scoping note worth keeping regardless of deployment target: vLLM
-serves LLMs (and some VLMs), not diffusion UNets/transformers — there's no
-literal "vLLM-serve SDXL." The one place vLLM legitimately fits a T2I
-pipeline is serving a small prompt-rewriting LLM (`PromptRewriter` in that
-file), which is what it's used for there.
+loading checkpoints straight from the Hub instead of a Modal volume. That file's note that "vLLM serves LLMs, not diffusion transformers" was true
+when it was written and no longer is: vLLM-Omni and SGLang Diffusion both serve
+diffusion transformers directly, including FLUX.2 — see [Serving a post-trained
+checkpoint](#serving-a-post-trained-checkpoint). The `PromptRewriter` in that
+file (a small LLM served by vLLM to rewrite prompts) is still a reasonable use
+of vLLM proper alongside a diffusion server.
 
 ## Repo layout
 
 ```
 src/dptlab/
-  models/registry.py       # SDXL / FLUX ModelSpec registry
+  models/registry.py       # SDXL / FLUX / FLUX.2 [klein] ModelSpec registry
   data/                     # dataset classes for each recipe
   training/                 # lora.py, dpo.py, grpo.py, distill.py, common.py
+    peft_methods.py          # LoRA/DoRA/LoHa/LoKr/OFT/BOFT registry + checkpoint formats
+    objectives.py            # epsilon (SDXL) vs. rectified flow (FLUX.2) training steps
   eval/
     adapters/                # T2IAdapter protocol + CheckpointAdapter
-    metrics/                 # clip_score, aesthetic, winrate
+    metrics/                 # clip_score, aesthetic, winrate,
+                             #   subject_fidelity (DINO/CLIP-I), dreambench_judge
     runner.py, cli.py
   serve/modal_app.py        # optional: reference Modal endpoint (+ vLLM prompt rewriter)
+  serve/backends.py         # SGLang Diffusion / vLLM-Omni launch specs for merged exports
 configs/recipes/*.yaml       # one config per recipe
 prompts/                       # seed prompt sets for eval / GRPO / distill / DPO-pair-building
 data/concept_dataset/          # toy synthetic LoRA dataset (swap for real photos)
@@ -150,6 +327,12 @@ scripts/
   push_to_hub.py                # publish a checkpoint + model card to the Hub
   update_models_md.py           # record its benchmark row in MODELS.md
 tests/
+flux2-klein-peft/               # the FLUX.2 [klein] PEFT benchmark (own README)
+  learning-doc.md                 why it's built this way
+  configs/                        one per PEFT method
+  scripts/                        prepare_syncd, autolabel, sweep_peft,
+                                  merge_and_export, quantize_nvfp4
+  tests/
 MODELS.md                       # the leaderboard
 ```
 
