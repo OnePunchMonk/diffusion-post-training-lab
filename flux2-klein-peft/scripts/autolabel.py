@@ -93,11 +93,12 @@ def load_sam(model_id: str, device: str):
 def sam_subject_mask(model, processor, image, device: str):
     """Segment the main subject with a centre-box prompt.
 
-    DreamBooth photos are subject-centred by construction, so a box covering the
-    middle 80% of the frame is a reliable prompt and avoids needing a detector
-    in the loop. SAM returns three candidate masks per prompt (roughly
-    sub-part / part / whole); we take the highest-IoU-scored one, which for a
-    centred object prompt is the whole object.
+    SynCD renders each object centred in frame, so a box covering the middle 80%
+    is a reliable prompt and avoids putting a detector in the loop. SAM returns
+    three candidate masks per prompt (roughly sub-part / part / whole); we take
+    the highest-IoU-scored one, which for a centred object prompt is the whole
+    object. Re-check this assumption before pointing the script at a dataset
+    whose subjects are off-centre or partially occluded.
     """
     import torch
 
