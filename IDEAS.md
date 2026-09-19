@@ -1,7 +1,8 @@
 # Ideas and open work
 
-A running checklist from the 2026-09-18/19 working session. Status is what the
-repo can defend today, not what has a file for it.
+A running checklist from the 2026-09-18/19 working session, mirrored as
+[issue #10](https://github.com/OnePunchMonk/diffusion-post-training-lab/issues/10).
+Status is what the repo can defend today, not what has a file for it.
 
 Ordered by the thing that unblocks the most: **the repo has almost no measured
 results.** Every harness below is written and tested; two have produced a
@@ -15,8 +16,9 @@ The harness is complete and unrun. This is the highest-value gap because six
 methods, one subject is ~2 GPU-hours and turns a "benchmark" PR into a
 benchmark.
 
-- [ ] **Run the one-subject sweep** (6 methods × 500 steps, ~$3-5 on Modal)
-      — `modal run --detach flux2-klein-peft/modal/sweep.py::sweep`
+- [x] **One-subject sweep run and evaluated** — six adapters trained, scored on
+      three held-out prompts. See `flux2-klein-peft/results/`. LoRA leads both
+      axes; treat the ordering as a hypothesis, n=1
 - [ ] **Publish the adapters to the Hub** — `scripts/push_to_hub.py` is already
       method-aware (non-LoRA methods get a peft-injection snippet, since
       `load_lora_weights` would silently serve the base model)
@@ -128,7 +130,30 @@ Nothing in the repo shows where time goes in a forward pass.
       never been run. No measured throughput or latency
 - [ ] No video model anywhere
 
-## 8. Housekeeping
+## 8. Papers to try
+
+- [ ] **[VoT: Vision-of-Thought](https://www.alphaxiv.org/abs/2609.07815)**
+      (Sun et al., Sept 2026) — a discrete visual-thinking layer between a VLM
+      and a diffusion transformer, three-branch MoT, GenEval 0.91 vs
+      FLUX.1-dev 0.82. Built on Mogao-14B, so full replication is expensive;
+      the tokenizer-alignment idea may be testable at klein scale
+
+## 9. Direction: a vision-models playground
+
+The pieces already here — SAM, InternVL2, DINO as a metric — point at a wider
+scope than diffusion post-training: one repo covering **DINO, SAM, Depth
+Anything, VLMs, image generation and video generation** behind a shared eval
+harness.
+
+- [ ] Decide whether that lives here or in a new repo. `dptlab`'s stated scope
+      is diffusion post-training and it is already straining
+- [ ] A shared adapter/eval protocol across families, so a new model is a
+      `ModelSpec` rather than a fork
+- [ ] **Depth Anything** — absent entirely
+- [ ] **DINO** is only a metric today; DINOv2/v3 as a backbone is a different
+      piece of work
+
+## 10. Housekeeping
 
 - [ ] `MODELS.md` says it's a build artifact but has one stale row
 - [ ] Modal: always `--detach`. A non-detached run dies when the local client
