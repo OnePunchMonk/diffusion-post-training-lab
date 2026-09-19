@@ -1,0 +1,12 @@
+{
+  "method": "dora",
+  "subject": "subject-5",
+  "split": "heldout",
+  "clip_t": 0.9572,
+  "dino": 0.4424,
+  "clip_i": 0.7167,
+  "avg_latency_ms": 2289.3,
+  "n_prompts": 6,
+  "steps": 167,
+  "trainable_parameters": 14489728
+}

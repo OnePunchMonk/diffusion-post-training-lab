@@ -1,73 +1,65 @@
 {
-  "subject": "subject-5",
-  "optimizer_steps": 167,
-  "n_prompts": 3,
-  "cells": [
-    {
-      "method": "lora",
-      "subject": "subject-5",
-      "clip_t": 0.9648,
-      "dino": 0.506,
-      "clip_i": 0.754,
-      "avg_latency_ms": 2685.9,
-      "n_prompts": 3,
-      "steps": 167,
-      "trainable_parameters": 13813760
-    },
+  "note": "in = SynCD generation prompts (training scenes). out = held-out recontextualization.",
+  "rows": [
     {
       "method": "dora",
-      "subject": "subject-5",
-      "clip_t": 0.9507,
-      "dino": 0.4775,
-      "clip_i": 0.7459,
-      "avg_latency_ms": 2369.3,
-      "n_prompts": 3,
-      "steps": 167,
-      "trainable_parameters": 14489728
+      "params": 14489728,
+      "insample_clip_t": 0.9507,
+      "insample_dino": 0.4775,
+      "heldout_clip_t": 0.9572,
+      "heldout_dino": 0.4424,
+      "heldout_clip_i": 0.7167,
+      "dino_drop": 0.035099999999999965
     },
     {
-      "method": "boft",
-      "subject": "subject-5",
-      "clip_t": 0.8945,
-      "dino": 0.3342,
-      "clip_i": 0.7017,
-      "avg_latency_ms": 2718.7,
-      "n_prompts": 3,
-      "steps": 167,
-      "trainable_parameters": 3041280
+      "method": "lora",
+      "params": 13813760,
+      "insample_clip_t": 0.9648,
+      "insample_dino": 0.506,
+      "heldout_clip_t": 0.9646,
+      "heldout_dino": 0.432,
+      "heldout_clip_i": 0.7062,
+      "dino_drop": 0.07400000000000001
     },
     {
       "method": "lokr",
-      "subject": "subject-5",
-      "clip_t": 0.9249,
-      "dino": 0.3197,
-      "clip_i": 0.7013,
-      "avg_latency_ms": 1454.0,
-      "n_prompts": 3,
-      "steps": 167,
-      "trainable_parameters": 878976
-    },
-    {
-      "method": "oft",
-      "subject": "subject-5",
-      "clip_t": 0.8815,
-      "dino": 0.3142,
-      "clip_i": 0.6992,
-      "avg_latency_ms": 2857.5,
-      "n_prompts": 3,
-      "steps": 167,
-      "trainable_parameters": 1428480
+      "params": 878976,
+      "insample_clip_t": 0.9249,
+      "insample_dino": 0.3197,
+      "heldout_clip_t": 0.9502,
+      "heldout_dino": 0.2946,
+      "heldout_clip_i": 0.6665,
+      "dino_drop": 0.02510000000000001
     },
     {
       "method": "loha",
-      "subject": "subject-5",
-      "clip_t": 0.9636,
-      "dino": 0.305,
-      "clip_i": 0.711,
-      "avg_latency_ms": 1478.0,
-      "n_prompts": 3,
-      "steps": 167,
-      "trainable_parameters": 13813760
+      "params": 13813760,
+      "insample_clip_t": 0.9636,
+      "insample_dino": 0.305,
+      "heldout_clip_t": 0.971,
+      "heldout_dino": 0.2907,
+      "heldout_clip_i": 0.6637,
+      "dino_drop": 0.01429999999999998
+    },
+    {
+      "method": "oft",
+      "params": 1428480,
+      "insample_clip_t": 0.8815,
+      "insample_dino": 0.3142,
+      "heldout_clip_t": 0.9176,
+      "heldout_dino": 0.275,
+      "heldout_clip_i": 0.6484,
+      "dino_drop": 0.03919999999999996
+    },
+    {
+      "method": "boft",
+      "params": 3041280,
+      "insample_clip_t": 0.8945,
+      "insample_dino": 0.3342,
+      "heldout_clip_t": 0.8727,
+      "heldout_dino": 0.268,
+      "heldout_clip_i": 0.6291,
+      "dino_drop": 0.06619999999999998
     }
   ]
 }

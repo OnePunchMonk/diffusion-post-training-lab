@@ -1,0 +1,12 @@
+{
+  "method": "loha",
+  "subject": "subject-5",
+  "split": "heldout",
+  "clip_t": 0.971,
+  "dino": 0.2907,
+  "clip_i": 0.6637,
+  "avg_latency_ms": 2017.3,
+  "n_prompts": 6,
+  "steps": 167,
+  "trainable_parameters": 13813760
+}

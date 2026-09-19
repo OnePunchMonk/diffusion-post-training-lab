@@ -273,7 +273,7 @@ def sweep(steps: int = STEPS, methods: str = "") -> list[dict]:
 
 
 @app.function(image=image, gpu="A100-40GB", volumes=VOLUMES, secrets=[HF_SECRET], timeout=3600)
-def eval_cell(method: str, subject: str) -> dict:
+def eval_cell(method: str, subject: str, split: str = "heldout") -> dict:
     """Generate the subject's held-out prompts and score identity + prompt fidelity.
 
     Its own container for the same reason training cells get one: a klein
@@ -298,10 +298,11 @@ def eval_cell(method: str, subject: str) -> dict:
 
     subject_dir = P(DATA) / "syncd" / subject
     checkpoint = P(OUT) / "klein-peft" / method / subject / "final"
-    out_dir = P(OUT) / "klein-peft" / method / subject / "eval"
+    out_dir = P(OUT) / "klein-peft" / method / subject / f"eval-{split}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    rows = [json.loads(x) for x in (subject_dir / "prompts_eval.jsonl").read_text().splitlines() if x.strip()]
+    prompt_file = subject_dir / f"prompts_{split}.jsonl"
+    rows = [json.loads(x) for x in prompt_file.read_text().splitlines() if x.strip()]
     prompts = [r["prompt"] for r in rows]
     ids = [r["id"] for r in rows]
 
@@ -322,6 +323,7 @@ def eval_cell(method: str, subject: str) -> dict:
     result = {
         "method": method,
         "subject": subject,
+        "split": split,
         "clip_t": round(CLIPScorer().compute(prompts, images).value, 4),
         "dino": round(DINOScorer().compute(images, references).value, 4),
         "clip_i": round(CLIPImageScorer().compute(images, references).value, 4),
@@ -337,8 +339,15 @@ def eval_cell(method: str, subject: str) -> dict:
 
 
 @app.function(image=image, volumes=VOLUMES, timeout=60 * 60 * 3)
-def evaluate(methods: str = "") -> list[dict]:
-    """Score every trained cell, one container each, then print the table."""
+def evaluate(methods: str = "", split: str = "heldout") -> list[dict]:
+    """Score every trained cell, one container each, then print the table.
+
+    `split` defaults to **heldout**. SynCD's own `prompts` are the prompts that
+    *generated* the training images -- parallel arrays, not a split -- so
+    scoring on them measures reconstruction. They remain available as
+    `insample`, and the gap between the two is a per-method memorization
+    measure worth reporting.
+    """
     import json
     from pathlib import Path as P
 
@@ -348,14 +357,24 @@ def evaluate(methods: str = "") -> list[dict]:
     wanted = methods.split(",") if methods else list_methods()
     subjects = _subject_names()
 
-    todo = [
-        (m, s)
-        for m in wanted
-        for s in subjects
-        if (P(OUT) / "klein-peft" / m / s / "final" / "run_manifest.json").exists()
-    ]
-    print(f"{len(todo)} cells to evaluate")
-    results = list(eval_cell.starmap(todo))
+    # Resumable, like the sweep: a container can drop (we lost one to a
+    # heartbeat timeout), and re-scoring five finished cells to recover one is
+    # five times the cost for no information.
+    todo, results = [], []
+    for m in wanted:
+        for s in subjects:
+            if not (P(OUT) / "klein-peft" / m / s / "final" / "run_manifest.json").exists():
+                continue
+            done_path = P(OUT) / "klein-peft" / m / s / f"eval-{split}" / "result.json"
+            if done_path.exists():
+                print(f"skip {m}/{s} ({split} already scored)")
+                results.append(json.loads(done_path.read_text()))
+            else:
+                todo.append((m, s, split))
+
+    print(f"{len(todo)} cells to evaluate on the {split} split, {len(results)} already done")
+    if todo:
+        results += list(eval_cell.starmap(todo))
     outputs.reload()
 
     print(json.dumps(results, indent=2, default=str))

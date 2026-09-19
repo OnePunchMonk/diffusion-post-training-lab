@@ -17,11 +17,24 @@ background and pose are already decorrelated from identity in the training
 data, so whatever identity leakage remains is attributable to the adapter
 rather than to the dataset.
 
-Each metadata record gives us both halves of a split for free:
-  `category_description`  -- a plain description of the object, used as the
-                             training caption for every image of that subject.
-  `prompts`               -- the object placed in specific contexts, held out
-                             and used as the evaluation prompts.
+**SynCD's `prompts` are NOT a held-out split.** The dataset is synthetic:
+`prompts[i]` is the prompt that *generated* `filenames[i]`, so the two arrays
+are parallel and every prompt describes a scene the adapter trained on. An
+earlier version of this script treated them as held-out contexts, which meant
+the evaluation measured memorization and reported it as generalization. The
+error was invisible in the metrics and obvious the moment the images were
+looked at next to the training data.
+
+So two prompt files are written:
+
+  `prompts_insample.jsonl`  -- SynCD's own prompts, correctly labelled. Useful,
+                               but as a *reconstruction* measure.
+  `prompts_heldout.jsonl`   -- recontextualization templates applied to the
+                               subject's `category_description`. Genuinely
+                               unseen settings.
+
+Reporting both is better than only fixing it: the gap between them is a direct
+per-method measure of how much an adapter memorized rather than learned.
 
 **Cost.** The full dataset is 17.5GB across 10 zips. This script pulls one
 archive (~1.8GB) and slices N subjects out of it, which is enough for a
@@ -39,6 +52,19 @@ import zipfile
 from pathlib import Path
 
 REPO_ID = "nupurkmr9/syncd"
+
+# Recontextualization templates, in the DreamBooth style: the same object in
+# settings no training image shows. Deliberately varied in kind -- outdoor
+# scene, water, night, weather, art style, scale cue -- so a method cannot win
+# by being good at one narrow shift.
+HELDOUT_TEMPLATES = [
+    "{subject}, in the middle of a snowy forest",
+    "{subject}, floating on the surface of a swimming pool",
+    "{subject}, on a busy city street at night with neon signs",
+    "{subject}, on a beach at sunset with waves behind it",
+    "{subject}, in an oil painting in the style of Van Gogh",
+    "{subject}, held in a person's hand against a plain white wall",
+]
 
 
 def main() -> None:
@@ -124,13 +150,27 @@ def _extract_subject(zf: zipfile.ZipFile, record: dict, subject_dir: Path) -> bo
 
     (subject_dir / "metadata.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n")
 
-    # Held-out contexts: same object, contexts the adapter never saw during
-    # training. These are what prompt-following is scored on.
-    eval_rows = [
-        {"prompt": p, "id": f"{subject_dir.name}-{i}", "reference_image": rows[0]["file_name"]}
+    # In-sample: SynCD's own generation prompts, one per training image.
+    insample = [
+        {"prompt": p, "id": f"{subject_dir.name}-in-{i}", "reference_image": rows[0]["file_name"]}
         for i, p in enumerate(record["prompts"])
     ]
-    (subject_dir / "prompts_eval.jsonl").write_text("\n".join(json.dumps(r) for r in eval_rows) + "\n")
+    (subject_dir / "prompts_insample.jsonl").write_text(
+        "\n".join(json.dumps(r) for r in insample) + "\n"
+    )
+
+    # Held out: contexts nothing in this subject's training set depicts.
+    heldout = [
+        {
+            "prompt": template.format(subject=caption.rstrip(".")),
+            "id": f"{subject_dir.name}-out-{i}",
+            "reference_image": rows[0]["file_name"],
+        }
+        for i, template in enumerate(HELDOUT_TEMPLATES)
+    ]
+    (subject_dir / "prompts_heldout.jsonl").write_text(
+        "\n".join(json.dumps(r) for r in heldout) + "\n"
+    )
 
     (subject_dir / "subject.json").write_text(
         json.dumps(

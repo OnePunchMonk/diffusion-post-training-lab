@@ -81,12 +81,13 @@ python scripts/quantize_nvfp4.py --model exports/klein-oft-subject-0 \
 ## Results
 
 **[`RESULTS.md`](RESULTS.md)** — six methods trained and evaluated on SynCD
-subject-5. LoRA leads both axes (CLIP-T 0.9648, DINO 0.5060); LoHa is the
-informative cell, near-top prompt following with the lowest subject fidelity.
+subject-5, on two splits. **DoRA leads held-out subject fidelity** (DINO 0.4424)
+while LoRA leads in-sample (0.5060) — LoRA'''s DINO drops more than twice as far
+between the two, so its apparent lead was substantially memorization.
 
-That is **one subject and three prompts** — a pipeline-validation run, not a
-benchmark. Three confounds are recorded beside the table, including that the
-cells ran 167 optimizer steps rather than the 500 the configs request.
+That is **one subject** — a pipeline-validation run, not a benchmark. Five
+confounds are recorded beside the table, including a possible incomplete LoRA
+checkpoint that should be resolved before quoting LoRA'''s rows.
 
 ## Status
 
