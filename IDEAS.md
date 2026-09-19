@@ -130,15 +130,7 @@ Nothing in the repo shows where time goes in a forward pass.
       never been run. No measured throughput or latency
 - [ ] No video model anywhere
 
-## 8. Papers to try
-
-- [ ] **[VoT: Vision-of-Thought](https://www.alphaxiv.org/abs/2609.07815)**
-      (Sun et al., Sept 2026) — a discrete visual-thinking layer between a VLM
-      and a diffusion transformer, three-branch MoT, GenEval 0.91 vs
-      FLUX.1-dev 0.82. Built on Mogao-14B, so full replication is expensive;
-      the tokenizer-alignment idea may be testable at klein scale
-
-## 9. Direction: a vision-models playground
+## 8. Direction: a vision-models playground
 
 The pieces already here — SAM, InternVL2, DINO as a metric — point at a wider
 scope than diffusion post-training: one repo covering **DINO, SAM, Depth
@@ -153,7 +145,7 @@ harness.
 - [ ] **DINO** is only a metric today; DINOv2/v3 as a backbone is a different
       piece of work
 
-## 10. Post-training methods not yet covered
+## 9. Post-training methods not yet covered
 
 The repo has four recipes (LoRA, DPO, GRPO, LCM distillation). The space is much wider, and most of these are a new module against the existing `TrainConfig` / `ModelSpec` / eval scaffolding rather than a fork. Grouped by axis; **(cheap)** means it fits the current one-subject, sub-hour budget.
 
@@ -212,7 +204,7 @@ These need no training at all and produce a latency number immediately — the t
 
 - [ ] **Concept erasure** (ESD, UCE) and **machine unlearning** for diffusion — post-training that removes a capability rather than adding one. Entirely absent, and a distinct evaluation problem
 
-## 11. Step distillation — ideas
+## 10. Step distillation — ideas
 
 `distill.py` is one LCM-style recipe, marked "do not cite". The family is much
 larger, and klein is an unusually good testbed: it is **already** step- and
@@ -243,7 +235,7 @@ Experiments that fit this repo specifically:
       six adapters. Cheap — inference only, no training
 - [ ] Fix `distill.py`'s documented bugs before adding anything (§6)
 
-## 12. CFG distillation — ideas
+## 11. CFG distillation — ideas
 
 Classifier-free guidance costs **two forward passes per step**. CFG distillation
 folds it into one. Named in the JD, absent from this repo, and the repo already
@@ -268,7 +260,7 @@ registers two guidance-distilled models without implementing the technique.
 - [ ] Implement it on SDXL first, where CFG still genuinely costs 2×, rather
       than on klein where it has already been removed
 
-## 13. Quantization — ideas
+## 12. Quantization — ideas
 
 `quantize_nvfp4.py` exists and has never run. The interesting question for this
 repo is not "can we quantize klein" — Prism ML already did, to 1.58 bits — but
@@ -319,6 +311,113 @@ repo is not "can we quantize klein" — Prism ML already did, to 1.58 bits — b
       or collide?
 - [ ] **Quantization × step count** — does a 4-step model tolerate 4-bit as well
       as a 30-step one? There are fewer steps to average away the error
+
+## 13. Paper survey — candidates to try
+
+Surveyed 2026-09-19. Ranked by *fit to what this repo already has*, not by how
+recent they are. A paper earns a place here by being testable at klein scale
+with released code, or by answering a question already written into the repo.
+
+Cost tags: **(free)** runs on the M5 Pro · **(cheap)** ≲1 GPU-hour ·
+**(£££)** needs real training budget.
+
+### Tier 1 — directly answers an open question in this repo
+
+- [ ] **[SVDQuant](https://arxiv.org/abs/2411.05007)** (ICLR 2025 Spotlight) —
+      absorbs activation outliers into a high-precision **low-rank branch**,
+      then quantizes the rest to 4 bits. 3.5× memory and 3.0× speedup on
+      FLUX.1 12B on a 16GB 4090.
+      **Why it is top of the list:** it "seamlessly supports off-the-shelf
+      LoRAs without re-quantization" — the LoRA branch fuses into the low-rank
+      branch by slightly raising the rank. That is a *direct answer* to the
+      question in §13 and §3 about whether an FP16-trained adapter survives a
+      quantized base: SVDQuant's answer is yes, by construction. Our six klein
+      adapters are exactly the input it wants. Engine
+      ([Nunchaku](https://github.com/mit-han-lab/nunchaku)) is released. **(cheap)**
+- [ ] **[LoRaQ](https://arxiv.org/html/2604.18117v1)** — optimized low-rank
+      approximation for 4-bit quantization. Read against SVDQuant; the
+      difference between them is the thing to understand
+- [ ] **[LoraQuant](https://arxiv.org/html/2510.26690v1)** — mixed-precision
+      quantization *of the LoRA itself*, to ultra-low bits. The complement:
+      SVDQuant quantizes the base and keeps the adapter high-precision, this
+      squeezes the adapter. Together they bracket the design space
+- [ ] **[GPTQ-intrinsic LoRA](https://arxiv.org/pdf/2606.01412)** — near-optimal
+      joint low-precision quantization with low-rank adaptation
+- [ ] **[OrbitQuant](https://arxiv.org/pdf/2607.02461)** — data-agnostic
+      quantization for image **and video** diffusion transformers. Data-agnostic
+      matters: it sidesteps the per-timestep calibration problem that
+      `quantize_nvfp4.py` currently refuses to fake
+
+### Tier 2 — step distillation, testable at klein scale
+
+klein is already 4-step and rectified-flow, so these are all "distil a
+distilled model further, and see what breaks".
+
+- [ ] **[SANA-Sprint](https://openaccess.thecvf.com/content/ICCV2025/papers/Chen_SANA-Sprint_One-Step_Diffusion_with_Continuous-Time_Consistency_Distillation_ICCV_2025_paper.pdf)**
+      (ICCV 2025) — one-step via continuous-time consistency distillation.
+      SOTA GenEval at 0.1s vs 1.1s on H100. The strongest single reference
+- [ ] **[pi-Flow](https://arxiv.org/pdf/2510.14974)** — policy-based few-step
+      generation via imitation distillation. A different framing from both
+      consistency and distribution matching
+- [ ] **[One-Step Flow](https://arxiv.org/pdf/2412.09465)** (ICLR 2026) —
+      noise-augmented conditional rectified flow to widen the teacher's support
+- [ ] **[Self-Corrected Flow Distillation](https://www.researchgate.net/publication/390709870_Self-Corrected_Flow_Distillation_for_Consistent_One-Step_and_Few-Step_Image_Generation)**
+      — consistency across one- and few-step regimes
+- [ ] **[Few-Step Diffusion Sampling Through Instance-Aware Discretizations](https://arxiv.org/pdf/2603.17671)**
+      — picks the step schedule per instance. **Training-free**, so this is the
+      cheapest real efficiency win available **(cheap)**
+- [ ] **[A Decomposable Probe for Few-Step Diffusion Models](https://arxiv.org/pdf/2607.03256)**
+      — prompt / latent / score selectivity across backbone families and
+      distillation paradigms. Not a method: an *analysis* toolkit, and the kind
+      of thing that makes a benchmark repo more than a leaderboard **(cheap)**
+- [ ] **Score identity Distillation (SiD)** — data-free. Note: code and
+      checkpoints not released as of this survey, only promised
+
+### Tier 3 — flow matching itself
+
+klein is rectified flow, and `objectives.py` implements the interpolant and
+the logit-normal timestep schedule by hand. These are the papers that would
+justify or change those choices.
+
+- [ ] **[Shortcut models](https://arxiv.org/abs/2410.12557)** (Frans et al.,
+      ICLR 2025) — condition on step size; one model serves any step budget.
+      Removes the "one student per step count" problem entirely
+- [ ] **MeanFlow** (Geng et al., NeurIPS 2025) and **Improved MeanFlows** —
+      one-step generative modelling via average velocity. Plus 2026 follow-ups:
+      **Overcoming the curvature bottleneck in MeanFlow**, **Terminal Velocity
+      Matching**
+- [ ] **[Isokinetic Flow Matching](https://arxiv.org/pdf/2604.04491)** —
+      pathwise straightening. Straighter paths are *why* few-step works, so
+      this is upstream of every distillation method above
+- [ ] **[Curriculum Sampling](https://arxiv.org/pdf/2603.12517)** — a two-phase
+      timestep curriculum for efficient flow-matching training. Directly
+      applicable: our `_sample_sigmas` uses a fixed logit-normal, and a
+      curriculum is a small, testable change **(cheap)**
+- [ ] **[On Variance Reduction in Learning Mean Flows](https://arxiv.org/pdf/2605.09235)**
+- [ ] **[Order-Optimal Sample Complexity of Rectified Flows](https://arxiv.org/abs/2601.20250)**
+      — theory; useful for knowing how much data the sweep actually needs
+- [ ] **[MIT 6.S184 lecture notes](https://diffusion.csail.mit.edu/2026/docs/lecture_notes.pdf)**
+      — the clean introduction to flow matching and diffusion. Read first if
+      any of the above feels shaky
+
+### Tier 4 — bigger swings, budget permitting
+
+- [ ] **[VoT: Vision-of-Thought](https://www.alphaxiv.org/abs/2609.07815)**
+      (Sept 2026) — discrete visual-thinking layer between a VLM and a
+      diffusion transformer; three-branch MoT. GenEval **0.91** vs FLUX.1-dev
+      0.82. Built on Mogao-14B, so replication is **(£££)** — but the
+      tokenizer-alignment idea might be testable at klein scale
+- [ ] **[AnchorSeg](https://arxiv.org/abs/2604.18562)** (ACL 2026) — already
+      scaffolded in `anchorseg-internvl2/`. **(£££)** for training, **(cheap)**
+      for the eval-only step
+
+### Reading order if time is short
+
+1. **SVDQuant** — it answers a question we have already written down twice
+2. **MIT lecture notes** §flow matching — grounds everything in Tier 3
+3. **SANA-Sprint** — the distillation reference point
+4. **Instance-aware discretizations** + **Curriculum Sampling** — the two
+   cheapest things here that produce a number
 
 ## 14. Housekeeping
 
