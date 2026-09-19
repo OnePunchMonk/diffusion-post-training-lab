@@ -42,6 +42,26 @@ class PublishedResult:
     tolerance: float = 1.0
 
 
+# LISA Table 1, ReasonSeg val (overall). These are the training-free and
+# specialist baselines the cascade experiment sits beside. Grounded-SAM is the
+# direct comparison: same shape (text -> box -> SAM), different grounding stage.
+LISA_TABLE1_VAL = {
+    "OVSeg": (28.5, 18.6),
+    "GRES": (22.4, 19.9),
+    "X-Decoder": (22.6, 17.9),
+    "Grounded-SAM": (26.0, 14.5),
+}
+GROUNDED_SAM_VAL = PublishedResult(
+    name="Grounded-SAM / ReasonSeg val (LISA Table 1)",
+    giou=26.0,
+    ciou=14.5,
+    source="https://arxiv.org/abs/2308.00692 Table 1",
+    # Wider than the AnchorSeg tolerance on purpose: this is not a replication
+    # of Grounded-SAM, it is a different grounding stage in the same cascade.
+    # The number is a reference point, not a target to hit.
+    tolerance=99.0,
+)
+
 REASONSEG_VAL_7B = PublishedResult(
     name="AnchorSeg-LLaVA-1.5-7B / ReasonSeg val",
     giou=67.20,
