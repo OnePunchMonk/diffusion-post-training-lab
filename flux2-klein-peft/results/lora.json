@@ -1,0 +1,11 @@
+{
+  "method": "lora",
+  "subject": "subject-5",
+  "clip_t": 0.9648,
+  "dino": 0.506,
+  "clip_i": 0.754,
+  "avg_latency_ms": 2685.9,
+  "n_prompts": 3,
+  "steps": 167,
+  "trainable_parameters": 13813760
+}

@@ -1,0 +1,11 @@
+{
+  "method": "lokr",
+  "subject": "subject-5",
+  "clip_t": 0.9249,
+  "dino": 0.3197,
+  "clip_i": 0.7013,
+  "avg_latency_ms": 1454.0,
+  "n_prompts": 3,
+  "steps": 167,
+  "trainable_parameters": 878976
+}

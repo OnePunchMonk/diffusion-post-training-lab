@@ -272,6 +272,107 @@ def sweep(steps: int = STEPS, methods: str = "") -> list[dict]:
     return results
 
 
+@app.function(image=image, gpu="A100-40GB", volumes=VOLUMES, secrets=[HF_SECRET], timeout=3600)
+def eval_cell(method: str, subject: str) -> dict:
+    """Generate the subject's held-out prompts and score identity + prompt fidelity.
+
+    Its own container for the same reason training cells get one: a klein
+    pipeline plus CLIP plus DINO is several GB, and evaluating six methods in
+    one process accumulates them until it OOMs.
+
+    The two metrics point in opposite directions on purpose. CLIP-T rewards
+    following the new context, which an adapter that learned nothing scores
+    well on; DINO rewards reproducing *this* object, which an adapter that
+    memorized the training shots scores well on. A method only wins if it
+    moves both.
+    """
+    import json
+    from pathlib import Path as P
+
+    _setup()
+    from PIL import Image
+
+    from dptlab.eval.adapters.checkpoint import CheckpointAdapter
+    from dptlab.eval.metrics.clip_score import CLIPScorer
+    from dptlab.eval.metrics.subject_fidelity import CLIPImageScorer, DINOScorer
+
+    subject_dir = P(DATA) / "syncd" / subject
+    checkpoint = P(OUT) / "klein-peft" / method / subject / "final"
+    out_dir = P(OUT) / "klein-peft" / method / subject / "eval"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    rows = [json.loads(x) for x in (subject_dir / "prompts_eval.jsonl").read_text().splitlines() if x.strip()]
+    prompts = [r["prompt"] for r in rows]
+    ids = [r["id"] for r in rows]
+
+    # References are the subject's own training images: the question DINO
+    # answers is "is this the same object", not "is this a novel view".
+    train = [json.loads(x) for x in (subject_dir / "metadata.jsonl").read_text().splitlines() if x.strip()]
+    references = [Image.open(subject_dir / r["file_name"]).convert("RGB") for r in train]
+
+    adapter = CheckpointAdapter(checkpoint_dir=str(checkpoint))
+    images, latencies = [], []
+    for i, prompt in enumerate(prompts):
+        response = adapter.generate(prompt, seed=1234 + i)
+        response.image.save(out_dir / f"{ids[i]}.png")
+        images.append(response.image)
+        latencies.append(response.latency_ms)
+
+    manifest = json.loads((checkpoint / "run_manifest.json").read_text())
+    result = {
+        "method": method,
+        "subject": subject,
+        "clip_t": round(CLIPScorer().compute(prompts, images).value, 4),
+        "dino": round(DINOScorer().compute(images, references).value, 4),
+        "clip_i": round(CLIPImageScorer().compute(images, references).value, 4),
+        "avg_latency_ms": round(sum(latencies) / len(latencies), 1),
+        "n_prompts": len(prompts),
+        "steps": manifest.get("final_step"),
+        "trainable_parameters": manifest.get("trainable_parameters"),
+    }
+    (out_dir / "result.json").write_text(json.dumps(result, indent=2))
+    outputs.commit()
+    print(result)
+    return result
+
+
+@app.function(image=image, volumes=VOLUMES, timeout=60 * 60 * 3)
+def evaluate(methods: str = "") -> list[dict]:
+    """Score every trained cell, one container each, then print the table."""
+    import json
+    from pathlib import Path as P
+
+    _setup()
+    from dptlab.training.peft_methods import list_methods
+
+    wanted = methods.split(",") if methods else list_methods()
+    subjects = _subject_names()
+
+    todo = [
+        (m, s)
+        for m in wanted
+        for s in subjects
+        if (P(OUT) / "klein-peft" / m / s / "final" / "run_manifest.json").exists()
+    ]
+    print(f"{len(todo)} cells to evaluate")
+    results = list(eval_cell.starmap(todo))
+    outputs.reload()
+
+    print(json.dumps(results, indent=2, default=str))
+    ok = [r for r in results if "clip_t" in r]
+    ok.sort(key=lambda r: -r["dino"])
+    print()
+    header = f"{'method':<8}{'params':>12}{'steps':>7}{'CLIP-T':>9}{'DINO':>8}{'CLIP-I':>8}{'ms/img':>9}"
+    print(header)
+    print("-" * len(header))
+    for r in ok:
+        print(
+            f"{r['method']:<8}{r['trainable_parameters']:>12,}{r['steps']:>7}"
+            f"{r['clip_t']:>9.4f}{r['dino']:>8.4f}{r['clip_i']:>8.4f}{r['avg_latency_ms']:>9.0f}"
+        )
+    return results
+
+
 @app.local_entrypoint()
 def main() -> None:
     print("Entry points: prepare -> smoke -> sweep -> evaluate")

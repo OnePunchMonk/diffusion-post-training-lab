@@ -1,0 +1,11 @@
+{
+  "method": "boft",
+  "subject": "subject-5",
+  "clip_t": 0.8945,
+  "dino": 0.3342,
+  "clip_i": 0.7017,
+  "avg_latency_ms": 2718.7,
+  "n_prompts": 3,
+  "steps": 167,
+  "trainable_parameters": 3041280
+}

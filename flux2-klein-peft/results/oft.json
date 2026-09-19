@@ -1,0 +1,11 @@
+{
+  "method": "oft",
+  "subject": "subject-5",
+  "clip_t": 0.8815,
+  "dino": 0.3142,
+  "clip_i": 0.6992,
+  "avg_latency_ms": 2857.5,
+  "n_prompts": 3,
+  "steps": 167,
+  "trainable_parameters": 1428480
+}

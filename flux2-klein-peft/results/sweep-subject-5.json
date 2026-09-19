@@ -1,0 +1,73 @@
+{
+  "subject": "subject-5",
+  "optimizer_steps": 167,
+  "n_prompts": 3,
+  "cells": [
+    {
+      "method": "lora",
+      "subject": "subject-5",
+      "clip_t": 0.9648,
+      "dino": 0.506,
+      "clip_i": 0.754,
+      "avg_latency_ms": 2685.9,
+      "n_prompts": 3,
+      "steps": 167,
+      "trainable_parameters": 13813760
+    },
+    {
+      "method": "dora",
+      "subject": "subject-5",
+      "clip_t": 0.9507,
+      "dino": 0.4775,
+      "clip_i": 0.7459,
+      "avg_latency_ms": 2369.3,
+      "n_prompts": 3,
+      "steps": 167,
+      "trainable_parameters": 14489728
+    },
+    {
+      "method": "boft",
+      "subject": "subject-5",
+      "clip_t": 0.8945,
+      "dino": 0.3342,
+      "clip_i": 0.7017,
+      "avg_latency_ms": 2718.7,
+      "n_prompts": 3,
+      "steps": 167,
+      "trainable_parameters": 3041280
+    },
+    {
+      "method": "lokr",
+      "subject": "subject-5",
+      "clip_t": 0.9249,
+      "dino": 0.3197,
+      "clip_i": 0.7013,
+      "avg_latency_ms": 1454.0,
+      "n_prompts": 3,
+      "steps": 167,
+      "trainable_parameters": 878976
+    },
+    {
+      "method": "oft",
+      "subject": "subject-5",
+      "clip_t": 0.8815,
+      "dino": 0.3142,
+      "clip_i": 0.6992,
+      "avg_latency_ms": 2857.5,
+      "n_prompts": 3,
+      "steps": 167,
+      "trainable_parameters": 1428480
+    },
+    {
+      "method": "loha",
+      "subject": "subject-5",
+      "clip_t": 0.9636,
+      "dino": 0.305,
+      "clip_i": 0.711,
+      "avg_latency_ms": 1478.0,
+      "n_prompts": 3,
+      "steps": 167,
+      "trainable_parameters": 13813760
+    }
+  ]
+}
