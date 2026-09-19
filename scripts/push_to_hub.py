@@ -42,7 +42,7 @@ tags:
 # {repo_name}
 
 Post-trained with [`dptlab`](https://github.com/OnePunchMonk/diffusion-post-training-lab)
-using the **{recipe}** recipe with a **{peft_method}** adapter on top of
+using the **{recipe}** recipe with a **{peft_method}** adapter, on top of
 `{base_model_id}`.
 
 {trainable_line}
@@ -106,16 +106,7 @@ def build_model_card(manifest: dict, repo_id: str, eval_report: dict | None) -> 
     peft_method = manifest.get("peft_method") or config.get("peft_method", "lora")
     spec = get_model_spec(model_key)
 
-    if eval_report:
-        benchmark_section = (
-            f"| CLIP score | Aesthetic score | Win rate vs. base | Avg. latency (ms) |\n"
-            f"|---|---|---|---|\n"
-            f"| {eval_report['clip_score']:.3f} | {eval_report['aesthetic_score']:.3f} | "
-            f"{_fmt_winrate(eval_report.get('win_rate_vs_baseline'))} | {eval_report['avg_latency_ms']:.0f} |\n\n"
-            f"See `MODELS.md` in the repo for the full leaderboard across checkpoints."
-        )
-    else:
-        benchmark_section = "_Not yet benchmarked — run `dptlab eval` and re-push to fill this in._"
+    benchmark_section = _benchmark_section(eval_report)
 
     trainable = manifest.get("trainable_parameters")
     trainable_line = (
@@ -145,6 +136,46 @@ def build_model_card(manifest: dict, repo_id: str, eval_report: dict | None) -> 
     )
 
 
+def _benchmark_section(eval_report: dict | None) -> str:
+    """Render whichever eval shape the caller has.
+
+    Two exist: the original `dptlab eval` report (CLIP + aesthetic + win rate)
+    and the PEFT sweep's per-cell result (CLIP-T + DINO + CLIP-I, split-aware).
+    A card that silently omitted the numbers because the keys were unfamiliar
+    would be worse than one that says which shape it got.
+    """
+    if not eval_report:
+        return "_Not yet benchmarked — run `dptlab eval` and re-push to fill this in._"
+
+    if "dino" in eval_report:  # PEFT sweep result
+        split = eval_report.get("split", "unspecified")
+        note = {
+            "heldout": "Prompts describe settings no training image shows.",
+            "insample": "SynCD's own generation prompts — these describe the **training** "
+            "scenes, so this is a reconstruction measure, not generalization.",
+        }.get(split, "")
+        return (
+            f"Split: **{split}** ({eval_report.get('n_prompts', '?')} prompts). {note}\n\n"
+            f"| CLIP-T (prompt) | DINO (subject) | CLIP-I (subject) | Avg. latency (ms) |\n"
+            f"|---|---|---|---|\n"
+            f"| {eval_report['clip_t']:.4f} | {eval_report['dino']:.4f} | "
+            f"{eval_report['clip_i']:.4f} | {eval_report['avg_latency_ms']:.0f} |\n\n"
+            "CLIP-T and DINO pull in opposite directions: an adapter that learned nothing "
+            "scores well on the first, one that memorized its training shots scores well on "
+            "the second. Read them together.\n\n"
+            "See `RESULTS.md` in the repo for all six methods and the confounds."
+        )
+
+    return (
+        f"| CLIP score | Aesthetic score | Win rate vs. base | Avg. latency (ms) |\n"
+        f"|---|---|---|---|\n"
+        f"| {eval_report['clip_score']:.3f} | {eval_report['aesthetic_score']:.3f} | "
+        f"{_fmt_winrate(eval_report.get('win_rate_vs_baseline'))} | "
+        f"{eval_report['avg_latency_ms']:.0f} |\n\n"
+        "See `MODELS.md` in the repo for the full leaderboard across checkpoints."
+    )
+
+
 def _base_model_id(model_key: str) -> str:
     from dptlab.models.registry import get_model_spec
 
@@ -161,6 +192,11 @@ def main() -> None:
     ap.add_argument("--repo-id", required=True, help="e.g. OnePunchMonk/dptlab-sdxl-dpo-v1")
     ap.add_argument("--eval-report", help="Path to an eval_results/.../report.json to embed in the model card.")
     ap.add_argument("--private", action="store_true")
+    ap.add_argument(
+        "--caveat",
+        default=None,
+        help="A warning to put near the top of the card, e.g. a known defect in this checkpoint.",
+    )
     args = ap.parse_args()
 
     from huggingface_hub import HfApi
@@ -168,6 +204,10 @@ def main() -> None:
     manifest = load_run_manifest(args.checkpoint)
     eval_report = json.loads(Path(args.eval_report).read_text()) if args.eval_report else None
     card_text = build_model_card(manifest, args.repo_id, eval_report)
+    if args.caveat:
+        # Above the fold: a caveat below the benchmark table is a caveat nobody reads.
+        marker = f"# {args.repo_id.split('/')[-1]}"
+        card_text = card_text.replace(marker, f"{marker}\n\n> ⚠️ **{args.caveat}**", 1)
 
     api = HfApi()
     api.create_repo(args.repo_id, repo_type="model", private=args.private, exist_ok=True)

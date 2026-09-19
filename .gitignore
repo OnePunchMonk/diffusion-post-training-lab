@@ -27,3 +27,6 @@ data/processed/
 # secrets
 .env
 .modal.toml
+
+# Downloaded adapter checkpoints; the published copies live on the Hub.
+outputs/klein-peft/
