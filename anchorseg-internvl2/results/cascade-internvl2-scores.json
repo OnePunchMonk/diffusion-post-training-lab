@@ -1,0 +1,20 @@
+{
+  "giou": 19.48,
+  "ciou": 7.41,
+  "n": 200,
+  "missing_predictions": 0,
+  "by_query_type": {
+    "long": {
+      "giou": 16.02,
+      "ciou": 4.87,
+      "n": 113
+    },
+    "short": {
+      "giou": 23.97,
+      "ciou": 13.45,
+      "n": 87
+    }
+  },
+  "boxes_parsed": 199,
+  "no_box": 1
+}

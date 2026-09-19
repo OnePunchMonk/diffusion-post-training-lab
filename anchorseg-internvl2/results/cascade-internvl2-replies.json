@@ -1,0 +1,3591 @@
+{
+  "100637969_a7173095de_o": {
+    "query": "the cesspit",
+    "reply": "the cesspit[[131, 157, 953, 1000]]",
+    "is_sentence": false,
+    "box": [
+      299.728,
+      268.784,
+      2180.464,
+      1712.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      131.0,
+      157.0,
+      953.0,
+      1000.0
+    ]
+  },
+  "100706138_4dd951b10b_o": {
+    "query": "When celebrating birthdays, it is common to have a cake with decorations. What part of the cake in the picture is typically used to write birthday greetings or the name of the person celebrating?",
+    "reply": "when celebrating birthdays, it is common to have a cake with decorations. What part of the cake in the picture is typically used to write birthday greetings or the name of the person celebrating?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      640.0,
+      480.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "101677526_e9a3ba3ae1_o": {
+    "query": "something used for playing videos or music",
+    "reply": "something used for playing videos or music[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1024.0,
+      768.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "106484289_d257ea9e9d_o": {
+    "query": "In the animal kingdom, the males of certain species have a distinctive feature that sets them apart from the females. What part of the lion in this picture is a defining characteristic of male lions?",
+    "reply": "In the animal kingdom, the males of certain species have a distinctive feature that sets them apart from the females. What part of the lion in this picture is a defining characteristic of male lions?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      800.0,
+      533.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "107574647_0269b8ec6b_o": {
+    "query": "the person who is most likely to be the girl's trainer",
+    "reply": "the person who is most likely to be the girl's trainer[[670, 0, 1000, 622]]",
+    "is_sentence": false,
+    "box": [
+      1543.68,
+      0.0,
+      2304.0,
+      2149.632
+    ],
+    "scale": "0-1000",
+    "raw": [
+      670.0,
+      0.0,
+      1000.0,
+      622.0
+    ]
+  },
+  "109955815_034917e9d0_o": {
+    "query": "If the person in the picture is the owner of the blue car and wants to drive it, which car door is least likely to be the one he enters based on the picture shown?",
+    "reply": "If the person in the picture is the owner of the blue car and wants to drive it, which car door is least likely to be the one he enters based on the picture shown[[0, 270, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      414.72,
+      2048.0,
+      1536.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      270.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "11042914985_f365aa88e4_o": {
+    "query": "the place where the patient lies down to receive examination",
+    "reply": "the place where the patient lies down to receive examination[[0, 509, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      1235.852,
+      3636.0,
+      2428.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      509.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "11536014003_e8d6cc013b_o": {
+    "query": "the person who appears to have already won in the battle",
+    "reply": "the person who appears to have already won in the battle[[0, 106, 866, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      159.424,
+      1953.696,
+      1504.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      106.0,
+      866.0,
+      1000.0
+    ]
+  },
+  "116119566_75caf15337_o": {
+    "query": "When going fishing on a calm sea, what type of boat shown in the picture would be an ideal choice for a peaceful fishing experience?",
+    "reply": "When going fishing on a calm sea, what type of boat shown in the picture would be an ideal choice for a peaceful fishing experience?[[0, 223, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      53.52,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      223.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "120922377_6ae9b80ff2_o": {
+    "query": "something that ensures the person to land safely",
+    "reply": "something that ensures the person to land safely[[408, 29, 802, 395]]",
+    "is_sentence": false,
+    "box": [
+      1044.48,
+      55.68,
+      2053.12,
+      758.4000000000001
+    ],
+    "scale": "0-1000",
+    "raw": [
+      408.0,
+      29.0,
+      802.0,
+      395.0
+    ]
+  },
+  "12167784_837cb297fb_o": {
+    "query": "In a rural landscape, what objects in the picture could provide shade and shelter for animals or humans?",
+    "reply": "In a rural landscape, what objects in the picture could provide shade and shelter for animals or humans?[[0, 160, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      76.8,
+      640.0,
+      480.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      160.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "123642551_d40fcac3c6_o": {
+    "query": "a place where bees can suck nectar from flowers",
+    "reply": "a place where bees can suck nectar from flowers[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      939.0,
+      566.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "12536625_74fcd44793_o": {
+    "query": "We are currently watching a game and it's halftime. Who are the cheerleaders who come out to liven up the atmosphere?",
+    "reply": "We are currently watching a game and it's halftime. Who are the cheerleaders who come out to liven up the atmosphere?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1024.0,
+      272.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "125881983_d3e91689ac_o": {
+    "query": "where the garbage should be put",
+    "reply": "where the garbage should be put[[852, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      2208.384,
+      0.0,
+      2592.0,
+      1944.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      852.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "126350656_a88c35d111_o": {
+    "query": "In historical buildings, there are often signs or symbols displayed on the walls or floors to represent a specific meaning or identity. What in the picture could be used to display such signs or symbols?",
+    "reply": "signage[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1024.0,
+      768.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "131932697_65aa6ae468_o": {
+    "query": "something used for contacting other people",
+    "reply": "something used for contacting other people[[0, 497, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      846.888,
+      2272.0,
+      1704.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      497.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "132886352_fea80fb713_o": {
+    "query": "the part of this animal's body that comes into contact with the air",
+    "reply": "the part of this animal's body that comes into contact with the air[[88, 231, 642, 467]]",
+    "is_sentence": false,
+    "box": [
+      132.352,
+      231.0,
+      965.568,
+      467.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      88.0,
+      231.0,
+      642.0,
+      467.0
+    ]
+  },
+  "134357383_017f49db34_o": {
+    "query": "the places for further exploration",
+    "reply": "the places for further exploration[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      800.0,
+      600.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "137645671_b6f5cd3ae1_o": {
+    "query": "the equipment for sweeping away rain on rainy days",
+    "reply": "the equipment for sweeping away rain on rainy days[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      2592.0,
+      1944.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "14156439238_cb0c618f43_o": {
+    "query": "the stronger Mario",
+    "reply": "the stronger Mario[[505, 240, 733, 625]]",
+    "is_sentence": false,
+    "box": [
+      1648.32,
+      587.52,
+      2392.512,
+      1530.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      505.0,
+      240.0,
+      733.0,
+      625.0
+    ]
+  },
+  "143736875_1c8a4d0588_o": {
+    "query": "Dogs have keen sense of smell, which is why they can be used as drug-sniffing dogs. Which part in the picture gives dogs this characteristic?",
+    "reply": "Dogs have keen sense of smell, which is why they can be used as drug-sniffing dogs. Which part in the picture gives dogs this characteristic?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2272.0,
+      1704.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "14402637_6e286f0b44_o": {
+    "query": "the part that can transmit traction and braking torque, coming into contact with the ground",
+    "reply": "the part that can transmit traction and braking torque, coming into contact with the ground[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1169.0,
+      752.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "15125278394_70cc85a777_o": {
+    "query": "the person who is speaking currently",
+    "reply": "the person who is speaking currently[[0, 361, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      1247.616,
+      4608.0,
+      3456.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      361.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "151656870_f5697412ef_o": {
+    "query": "The fastest sinking ship",
+    "reply": "The fastest sinking ship[[0, 0, 1000, 670]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      500.0,
+      223.11
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      670.0
+    ]
+  },
+  "15349666379_1be2b93728_o": {
+    "query": "the camera lens that is more suitable for photographing nearby objects",
+    "reply": "the camera lens that is more suitable for photographing nearby objects[[0, 222, 424, 854]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      359.64,
+      915.8399999999999,
+      1383.48
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      222.0,
+      424.0,
+      854.0
+    ]
+  },
+  "158732540_c2be14565d_o": {
+    "query": "the area that people can walk on",
+    "reply": "the area that people can walk on[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      400.0,
+      300.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "158734072_41aa71be08_o": {
+    "query": "When the wind blows, small white objects are blown away and scattered in the air. What in the picture is responsible for this phenomenon?",
+    "reply": "When the wind blows, small white objects are blown away and scattered in the air. What in the picture is responsible for this phenomenon?[[336, 150, 728, 807]]",
+    "is_sentence": true,
+    "box": [
+      268.8,
+      79.95,
+      582.4,
+      430.13100000000003
+    ],
+    "scale": "0-1000",
+    "raw": [
+      336.0,
+      150.0,
+      728.0,
+      807.0
+    ]
+  },
+  "170313928_dc2aed12be_o": {
+    "query": "Dogs have keen sense of smell, which is why they can be used as drug-sniffing dogs. Which part in the picture gives dogs this characteristic?",
+    "reply": "Dogs have keen sense of smell, which is why they can be used as drug-sniffing dogs. Which part in the picture gives dogs this characteristic?[[849, 58, 1000, 512]]",
+    "is_sentence": true,
+    "box": [
+      869.376,
+      44.544000000000004,
+      1024.0,
+      393.216
+    ],
+    "scale": "0-1000",
+    "raw": [
+      849.0,
+      58.0,
+      1000.0,
+      512.0
+    ]
+  },
+  "17031827059_40b39f0c9e_o": {
+    "query": "the man who seems to lose",
+    "reply": "the man who seems to lose[[88, 521, 866, 929]]",
+    "is_sentence": false,
+    "box": [
+      132.0,
+      521.0,
+      1299.0,
+      929.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      88.0,
+      521.0,
+      866.0,
+      929.0
+    ]
+  },
+  "180841440_e770918a0b_o": {
+    "query": "Driving at night can be very dangerous due to poor visibility, which can lead to accidents. What part of the car needs to be turned on when driving at night?",
+    "reply": "Driving at night can be very dangerous due to poor visibility, which can lead to accidents. What part of the car needs to be turned on when driving at night?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1152.0,
+      864.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "182961491_0f40f276d0_o": {
+    "query": "If we were to have a friendly competition to see who can paddle the fastest in the water, what would be the most suitable vessels for this activity in the picture?",
+    "reply": "If we were to have a friendly competition to see who can paddle the fastest in the water, what would be the most suitable vessels for this activity in the picture[[0, 533, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      1125.6960000000001,
+      2816.0,
+      2112.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      533.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "18441667_725facae1a_o": {
+    "query": "In historical architecture, a building often has a grand entrance that consists of a large opening with a curved or pointed top. What feature in the picture resembles such an entrance?",
+    "reply": "In historical architecture, a building often has a grand entrance that consists of a large opening with a curved or pointed top. What feature in the picture resembles such an entrance?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      576.0,
+      768.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "192170028_ffc315ddf9_o": {
+    "query": "the friend of humans",
+    "reply": "the friend of humans[[280, 346, 598, 858]]",
+    "is_sentence": false,
+    "box": [
+      286.72,
+      265.72799999999995,
+      612.352,
+      658.944
+    ],
+    "scale": "0-1000",
+    "raw": [
+      280.0,
+      346.0,
+      598.0,
+      858.0
+    ]
+  },
+  "195469577_08f334cd89_o": {
+    "query": "something that produces pollen",
+    "reply": "something that produces pollen[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1392.0,
+      1023.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "195640965_08826b5347_o": {
+    "query": "In outdoor recreational activities, people can experience the thrill of flying in the sky with the help of equipment. What object in the picture can provide this experience?",
+    "reply": "In outdoor recreational activities, people can experience the thrill of flying in the sky with the help of equipment. What object in the picture can provide this experience?[[618, 108, 703, 307]]",
+    "is_sentence": true,
+    "box": [
+      494.4,
+      57.564,
+      562.4,
+      163.631
+    ],
+    "scale": "0-1000",
+    "raw": [
+      618.0,
+      108.0,
+      703.0,
+      307.0
+    ]
+  },
+  "19645703_6e8ea05b48_o": {
+    "query": "something that we can sit on",
+    "reply": "something that we can sit on[[0, 157, 104, 712]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      84.78,
+      74.88,
+      384.47999999999996
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      157.0,
+      104.0,
+      712.0
+    ]
+  },
+  "199953_df81ec489c_o": {
+    "query": "the ball that can only be hit into the hole at last",
+    "reply": "the ball that can only be hit into the hole at last[[580, 562, 694, 712]]",
+    "is_sentence": false,
+    "box": [
+      742.4,
+      539.5200000000001,
+      888.3199999999999,
+      683.52
+    ],
+    "scale": "0-1000",
+    "raw": [
+      580.0,
+      562.0,
+      694.0,
+      712.0
+    ]
+  },
+  "20026538219_9fbd8d2024_o": {
+    "query": "Seafood dishes often include a tangy condiment that enhances the flavor. What item in the picture can be squeezed onto the seafood as a tangy flavor enhancer?",
+    "reply": "Seafood dishes often include a tangy condiment that enhances the flavor. What item in the picture can be squeezed onto the seafood as a tangy flavor enhancer?[[0, 121, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      130.68,
+      1080.0,
+      1080.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      121.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "203525593_6f64196e3d_o": {
+    "query": "the area where people can stand without getting wet",
+    "reply": "the area where people can stand without getting wet[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      800.0,
+      600.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "204485076_d0b799d095_o": {
+    "query": "When enjoying an ice cream sundae, what can we use to scoop up the whipped cream and place it on top of the ice cream?",
+    "reply": "When enjoying an ice cream sundae, what can we use to scoop up the whipped cream and place it on top of the ice cream?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1536.0,
+      2048.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "206674234_4cb520b13d_o": {
+    "query": "something that the monkey uses to pierce its food",
+    "reply": "something that the monkey uses to pierce its food[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1066.0,
+      1600.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "207090875_9a57789fae_o": {
+    "query": "Fishing is a popular activity for relaxation and leisure. What tool is the man in the picture using to catch fish?",
+    "reply": "Fishing is a popular activity for relaxation and leisure. What tool is the man in the picture using to catch fish?[[242, 139, 480, 505]]",
+    "is_sentence": true,
+    "box": [
+      387.2,
+      166.8,
+      768.0,
+      606.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      242.0,
+      139.0,
+      480.0,
+      505.0
+    ]
+  },
+  "218405745_60bbfbab1a_o": {
+    "query": "In case of a fire, it is important to have access to fire safety equipment. What object in the picture is specifically designed to store and release fire extinguishing substances?",
+    "reply": "In case of a fire, it is important to have access to fire safety equipment. What object in the picture is specifically designed to store and release fire extinguishing substances?[[0, 0, 252, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      192.276,
+      509.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      252.0,
+      1000.0
+    ]
+  },
+  "219574309_27e7b7fcaf_o": {
+    "query": "unopened flower bud",
+    "reply": "unopened flower bud[[220, 240, 517, 501]]",
+    "is_sentence": false,
+    "box": [
+      187.0,
+      135.84,
+      439.45,
+      283.566
+    ],
+    "scale": "0-1000",
+    "raw": [
+      220.0,
+      240.0,
+      517.0,
+      501.0
+    ]
+  },
+  "2275041027_46281db92f_o": {
+    "query": "There are two washing machines as shown in the picture. If I need to do laundry, where in the picture would I put the clothes?",
+    "reply": "there are two washing machines as shown in the picture[[27, 272, 964, 733]]",
+    "is_sentence": true,
+    "box": [
+      58.536,
+      885.0880000000001,
+      2089.9519999999998,
+      2385.182
+    ],
+    "scale": "0-1000",
+    "raw": [
+      27.0,
+      272.0,
+      964.0,
+      733.0
+    ]
+  },
+  "22758113_b762c61e62_o": {
+    "query": "Soldiers are often equipped with various tools and weapons to carry out their duties. What item in the picture can be classified as a weapon?",
+    "reply": "Soldiers are often equipped with various tools and weapons to carry out their duties. What item in the picture can be classified as a weapon[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      400.0,
+      300.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "23006748_6559db5455_o": {
+    "query": "In a mechanical workshop, there are various machines and tools used for different purposes. What in the picture could be used to rotate or spin other parts or objects?",
+    "reply": "In a mechanical workshop, there are various machines and tools used for different purposes. What in the picture could be used to rotate or spin other parts or objects?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1610.0,
+      1606.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "2310829469_6429ae21b8_o": {
+    "query": "the solitary tree",
+    "reply": "the solitary tree[[0, 45, 436, 816]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      69.12,
+      892.928,
+      1253.376
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      45.0,
+      436.0,
+      816.0
+    ]
+  },
+  "240284336_06aace2ef6_o": {
+    "query": "something that protects the woman's eyes from getting wet",
+    "reply": "something that protects the woman's eyes from getting wet[[429, 348, 696, 571]]",
+    "is_sentence": false,
+    "box": [
+      1016.73,
+      734.976,
+      1649.52,
+      1205.952
+    ],
+    "scale": "0-1000",
+    "raw": [
+      429.0,
+      348.0,
+      696.0,
+      571.0
+    ]
+  },
+  "2460483655_b05ca25bc0_o": {
+    "query": "something indicating that someone is celerating the birthday",
+    "reply": "something indicating that someone is celerating the birthday[[0, 733, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      477.183,
+      383.0,
+      651.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      733.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "25828683_4b93893333_o": {
+    "query": "something that the dog's food should be put into",
+    "reply": "something that the dog's food should be put into[[883, 463, 1000, 612]]",
+    "is_sentence": false,
+    "box": [
+      565.12,
+      222.24,
+      640.0,
+      293.76
+    ],
+    "scale": "0-1000",
+    "raw": [
+      883.0,
+      463.0,
+      1000.0,
+      612.0
+    ]
+  },
+  "26275329_8ebc22fa03_o": {
+    "query": "something that avoids falling down",
+    "reply": "something that avoids falling down[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1632.0,
+      1224.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "2759322646_230f21cac0_o": {
+    "query": "When hanging laundry outside to dry, what material in the picture would be suitable for holding the clothes securely in place?",
+    "reply": "When hanging laundry outside to dry, what material in the picture would be suitable for holding the clothes securely in place?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      3872.0,
+      2592.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "2770851915_3e7c76fa2d_o": {
+    "query": "It is common for some bird species to live near bodies of water and rely on them as their primary habitat. What in the picture can be considered as the habitat for the birds mentioned?",
+    "reply": "It is common for some bird species to live near bodies of water and rely on them as their primary habitat. What in the picture can be considered as the habitat for the birds mentioned?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1271.0,
+      1193.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "2776332001_1227fb6349_o": {
+    "query": "Some dishes are baked in the oven to enhance their flavors. What object in the picture is commonly used to place the dishes in the oven for baking?",
+    "reply": "dish[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1200.0,
+      900.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "2881277421_416273151c_o": {
+    "query": "something that allows people to drink without touching the rim of the cup",
+    "reply": "something that allows people to drink without touching the rim of the cup[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1200.0,
+      1600.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "29207064_35031b1c0a_o": {
+    "query": "something that allow pedestrians to cross the canyon",
+    "reply": "something that allow pedestrians to cross the canyon[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      5815.0,
+      1989.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "3053001508_94a3189528_o": {
+    "query": "the keys on a piano used to play notes of half-steps or semitones",
+    "reply": "the keys on a piano used to play notes of half-steps or semitones[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      2919.0,
+      1941.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "307352084_54958c99e4_o": {
+    "query": "Generally speaking, dogs do not have horns on their heads, only a pair of ears. What part of the dog's head in this picture looks strange?",
+    "reply": "Generally speaking, dogs do not have horns on their heads, only a pair of ears. What part of the dog's head in this picture looks strange?[[121, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      125.719,
+      0.0,
+      1039.0,
+      1533.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      121.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "33343263_c4f465d900_o": {
+    "query": "During times of war, armored vehicles are commonly used to protect soldiers and engage in combat. What object in the picture can provide such protection?",
+    "reply": "armored vehicle[[27, 249, 367, 481]]",
+    "is_sentence": true,
+    "box": [
+      55.296,
+      382.464,
+      751.616,
+      738.816
+    ],
+    "scale": "0-1000",
+    "raw": [
+      27.0,
+      249.0,
+      367.0,
+      481.0
+    ]
+  },
+  "3417356_b6f97b6b6e_o": {
+    "query": "the source of power for the ship",
+    "reply": "the source of power for the ship[[197, 101, 350, 803]]",
+    "is_sentence": false,
+    "box": [
+      403.456,
+      155.13600000000002,
+      716.8,
+      1233.4080000000001
+    ],
+    "scale": "0-1000",
+    "raw": [
+      197.0,
+      101.0,
+      350.0,
+      803.0
+    ]
+  },
+  "34195937_dda257475e_o": {
+    "query": "Insects are often found on or near trees, where they can find shelter and food. What part of the tree in this picture could insects commonly be found on or around?",
+    "reply": "Insects are often found on or near trees, where they can find shelter and food. What part of the tree in this picture could insects commonly be found on or around?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2304.0,
+      1728.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "35586769_d404720c32_o": {
+    "query": "the goat nearest to the bottom stone",
+    "reply": "the goat nearest to the bottom stone[[177, 652, 612, 1000]]",
+    "is_sentence": false,
+    "box": [
+      564.63,
+      1528.288,
+      1952.28,
+      2344.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      177.0,
+      652.0,
+      612.0,
+      1000.0
+    ]
+  },
+  "35843200_c0f42a7488_o": {
+    "query": "In an intense dragon boat race. What object in the picture should be struck to boost the morale of the competing team and cheer them on?",
+    "reply": "In an intense dragon boat race. What object in the picture should be struck to boost the morale of the competing team and cheer them on?[[0, 175, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      172.54999999999998,
+      1544.0,
+      986.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      175.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "371426030_646af53def_o": {
+    "query": "the food that the bird likes to eat",
+    "reply": "the food that the bird likes to eat[[436, 0, 633, 1000]]",
+    "is_sentence": false,
+    "box": [
+      697.6,
+      0.0,
+      1012.8,
+      1200.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      436.0,
+      0.0,
+      633.0,
+      1000.0
+    ]
+  },
+  "3851727632_94aa92f22e_o": {
+    "query": "the object used to protect the ears",
+    "reply": "the object used to protect the ears[[0, 762, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      1609.344,
+      2816.0,
+      2112.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      762.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "3855498466_84ef5fb83d_o": {
+    "query": "the boxes inside the refrigerator",
+    "reply": "the boxes inside the refrigerator[[0, 173, 1000, 807]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      354.304,
+      1536.0,
+      1652.736
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      173.0,
+      1000.0,
+      807.0
+    ]
+  },
+  "3857009869_35e6ee279e_o": {
+    "query": "As a speaker, relying solely on verbal explanations may not effectively convey the intended message to the audience. What area of the picture should be used to project the key content and make it more understandable for the audience during the presentation?",
+    "reply": "window[[168, 157, 297, 508]]",
+    "is_sentence": true,
+    "box": [
+      720.384,
+      447.136,
+      1273.5359999999998,
+      1446.784
+    ],
+    "scale": "0-1000",
+    "raw": [
+      168.0,
+      157.0,
+      297.0,
+      508.0
+    ]
+  },
+  "3857251202_d59383ef6b_o": {
+    "query": "In a military airfield, what area is specifically designed for aircraft to take off and land?",
+    "reply": "In a military airfield, what area is specifically designed for aircraft to take off and land?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      4288.0,
+      2848.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "3872469525_4a26003ccf_o": {
+    "query": "In a healthy meal, vegetables are often included to provide essential nutrients. What in the picture can be used to eat the vegetables?",
+    "reply": "In a healthy meal, vegetables are often included to provide essential nutrients. What in the picture can be used to eat the vegetables?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1280.0,
+      854.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "3896626951_a878cf5fbc_o": {
+    "query": "the people who are about to get on the vehicle",
+    "reply": "the people who are about to get on the vehicle[[206, 231, 359, 672]]",
+    "is_sentence": false,
+    "box": [
+      164.79999999999998,
+      138.6,
+      287.2,
+      403.20000000000005
+    ],
+    "scale": "0-1000",
+    "raw": [
+      206.0,
+      231.0,
+      359.0,
+      672.0
+    ]
+  },
+  "39423671_8fad5101bb_o": {
+    "query": "This image depicts a forest. Which of the animals in the picture pose a threat to human safety?",
+    "reply": "This image depicts a forest. Which of the animals in the picture pose a threat to human safety?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      400.0,
+      300.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "39689255_948b16d60c_o": {
+    "query": "the part of the house that can be opened",
+    "reply": "the part of the house that can be opened[[382, 249, 625, 663]]",
+    "is_sentence": false,
+    "box": [
+      867.904,
+      424.296,
+      1420.0,
+      1129.752
+    ],
+    "scale": "0-1000",
+    "raw": [
+      382.0,
+      249.0,
+      625.0,
+      663.0
+    ]
+  },
+  "400894499_50d82fd433_o": {
+    "query": "During a meal, people typically use utensils to bring food to their mouths. What tool in the picture can be used to fulfill this need?",
+    "reply": "dish[[0, 0, 998, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      798.4,
+      600.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      998.0,
+      1000.0
+    ]
+  },
+  "416256231_d834e7cd6b_o": {
+    "query": "the damaged part on the pants",
+    "reply": "the damaged part on the pants[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      3072.0,
+      2304.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "420996912_6068bac9ac_o": {
+    "query": "In a modern office, what object in the picture is commonly used for inputting data and controlling the computer?",
+    "reply": "In a modern office, what object in the picture is commonly used for inputting data and controlling the computer?[[580, 715, 770, 827]]",
+    "is_sentence": true,
+    "box": [
+      742.4,
+      732.16,
+      985.6,
+      846.848
+    ],
+    "scale": "0-1000",
+    "raw": [
+      580.0,
+      715.0,
+      770.0,
+      827.0
+    ]
+  },
+  "421117513_18787aee45_o": {
+    "query": "When soldiers gather for a group photo, what object in the picture is usually held by one of them to represent their unit or country?",
+    "reply": "When soldiers gather for a group photo, what object in the picture is usually held by one of them to represent their unit or country[[0, 123, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      53.013,
+      600.0,
+      431.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      123.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "4220420_7397afecdb_o": {
+    "query": "the sour food",
+    "reply": "the sour food[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      640.0,
+      480.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "423924328_03e15e0045_o": {
+    "query": "In some circus performances, gymnasts perform aerial acrobatics using long pieces of fabric that hang from the ceiling. What in the picture could be used for this type of performance?",
+    "reply": "In some circus performances, gymnasts perform aerial acrobatics using long pieces of fabric that hang from the ceiling. What in the picture could be used for this type of performance?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1600.0,
+      1064.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "426705104_c773321b5f_o": {
+    "query": "In some rural areas, horse-drawn carts are still used for transportation and carrying goods. What is the main source of power that drives the cart in the picture?",
+    "reply": "In some rural areas, horse-drawn carts are still used for transportation and carrying goods. What is the main source of power that drives the cart in the picture?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      3456.0,
+      2304.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "432825961_432ba47889_o": {
+    "query": "the object that can be used by the owner to lead the dog",
+    "reply": "the object that can be used by the owner to lead the dog[[0, 366, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      278.892,
+      1000.0,
+      762.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      366.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "437720563_5a1132a597_o": {
+    "query": "the region showing current time",
+    "reply": "the region showing current time[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1024.0,
+      768.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "4387451834_4e3cf14067_o": {
+    "query": "the container that can be used to hold soup currently",
+    "reply": "the container that can be used to hold soup currently[[0, 29, 321, 440]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      17.400000000000002,
+      256.8,
+      264.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      29.0,
+      321.0,
+      440.0
+    ]
+  },
+  "441877777_1035b57711_o": {
+    "query": "the object that might reflect this person's marital status",
+    "reply": "the object that might reflect this person's marital status[[762, 0, 1000, 326]]",
+    "is_sentence": false,
+    "box": [
+      1219.2,
+      0.0,
+      1600.0,
+      347.516
+    ],
+    "scale": "0-1000",
+    "raw": [
+      762.0,
+      0.0,
+      1000.0,
+      326.0
+    ]
+  },
+  "445001004_fa2a2502eb_o": {
+    "query": "objects that can help women appear taller",
+    "reply": "objects that can help women appear taller[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      500.0,
+      465.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "4532148661_abd0b31d36_o": {
+    "query": "When visiting a library or bookstore, people often browse through the shelves to find interesting books to read. Which area in the picture could provide a variety of reading materials for visitors?",
+    "reply": "When visiting a library or bookstore, people often browse through the shelves to find interesting books to read. Which area in the picture could provide a variety of reading materials for visitors?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2683.0,
+      4000.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "4537339_3d8e488294_o": {
+    "query": "something that the persons use to cross the water",
+    "reply": "something that the persons use to cross the water[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1600.0,
+      1200.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "457068560_f0e6b2a62e_o": {
+    "query": "In an orchestra, musicians play different instruments. What object in the picture is commonly played with a bow to produce sound?",
+    "reply": "In an orchestra, musicians play different instruments. What object in the picture is commonly played with a bow to produce sound?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      330.0,
+      280.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "457474031_af43675235_o": {
+    "query": "If we were to take a flight in the sky, what part of the plane in the picture would be spinning to generate lift and propel the aircraft forward?",
+    "reply": "If we were to take a flight in the sky, what part of the plane in the picture would be spinning to generate lift and propel the aircraft forward?[[0, 310, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      774.6899999999999,
+      3680.0,
+      2499.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      310.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "45920253_3c95aa7de0_o": {
+    "query": "When snorkeling or scuba diving, it is important to wear certain equipment to protect the eyes and aid in vision. What object in the picture can be used for this purpose?",
+    "reply": "man[[501, 56, 966, 973]]",
+    "is_sentence": true,
+    "box": [
+      513.024,
+      43.008,
+      989.184,
+      747.264
+    ],
+    "scale": "0-1000",
+    "raw": [
+      501.0,
+      56.0,
+      966.0,
+      973.0
+    ]
+  },
+  "460368292_01c069b6e0_o": {
+    "query": "something that tastes spicy",
+    "reply": "something that tastes spicy[[382, 117, 806, 519]]",
+    "is_sentence": false,
+    "box": [
+      391.168,
+      89.85600000000001,
+      825.344,
+      398.592
+    ],
+    "scale": "0-1000",
+    "raw": [
+      382.0,
+      117.0,
+      806.0,
+      519.0
+    ]
+  },
+  "474984853_6bdcd23777_o": {
+    "query": "I feel my commute is too slow now and I'm hoping to find a convenient mode of transportation that can also help me exercise. Can you help me find the corresponding part in the picture?",
+    "reply": "man[[802, 0, 1000, 510]]",
+    "is_sentence": true,
+    "box": [
+      1328.112,
+      0.0,
+      1656.0,
+      606.39
+    ],
+    "scale": "0-1000",
+    "raw": [
+      802.0,
+      0.0,
+      1000.0,
+      510.0
+    ]
+  },
+  "476811844_5958b8f622_o": {
+    "query": "When you look closely into a person's eye, what is the part that surrounds the dark-colored iris and helps protect the eye from dust and debris?",
+    "reply": "cornea[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2592.0,
+      1944.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "477523501_4be24e2fe1_o": {
+    "query": "I want to take a trip around the world, but I need some transportation to help me cross the oceans. What type of transportation in the picture can fulfill this requirement?",
+    "reply": "I want to take a trip around the world, but I need some transportation to help me cross the oceans. What type of transportation in the picture can fulfill this requirement?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1280.0,
+      960.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "493997568_d6572d6a12_o": {
+    "query": "In ancient times, people used different methods to measure time during the day. What object in the picture could have been used as a timekeeping device based on the position of the sun?",
+    "reply": "in ancient times, people used different methods to measure time during the day[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      800.0,
+      600.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "496732227_eeccdc735d_o": {
+    "query": "Flowers are often used to decorate tables during special occasions or events. What item in the picture can be used to hold the flowers and keep them fresh by providing water to them?",
+    "reply": "vase[[418, 560, 628, 861]]",
+    "is_sentence": true,
+    "box": [
+      572.66,
+      1146.88,
+      860.36,
+      1763.328
+    ],
+    "scale": "0-1000",
+    "raw": [
+      418.0,
+      560.0,
+      628.0,
+      861.0
+    ]
+  },
+  "4971354_aa8650671a_o": {
+    "query": "where we can see the speed of the car",
+    "reply": "where we can see the speed of the car[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      2048.0,
+      1536.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "4998901970_b973aa3d94_o": {
+    "query": "the rabbit on the woman's back",
+    "reply": "the rabbit on the woman's back[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1089.0,
+      802.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "500793112_d334bb6b14_o": {
+    "query": "In a zoo, there are separate areas designated for different animals. What structure in the picture is used to confine and display animals?",
+    "reply": "In a zoo, there are separate areas designated for different animals. What structure in the picture is used to confine and display animals?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2592.0,
+      1944.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "500834330_1a4c91c820_o": {
+    "query": "What object in the picture could be used for defense and firepower in an ancient fort?",
+    "reply": "What object in the picture could be used for defense and firepower in an ancient fort?[[0, 231, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      138.6,
+      800.0,
+      600.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      231.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "502090668_b10a2b34de_o": {
+    "query": "the place where piano players should sit",
+    "reply": "the place where piano players should sit[[60, 647, 262, 822]]",
+    "is_sentence": false,
+    "box": [
+      76.8,
+      621.12,
+      335.36,
+      789.12
+    ],
+    "scale": "0-1000",
+    "raw": [
+      60.0,
+      647.0,
+      262.0,
+      822.0
+    ]
+  },
+  "5080826504_975e247d13_o": {
+    "query": "The general steps for brewing tea are to put tea leaves into a teacup and then pour hot water over them. What container in the picture is most likely to be used next for pouring hot water to make tea?",
+    "reply": "tea pot[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      4592.0,
+      3056.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "510542360_58d52c04f5_o": {
+    "query": "something that produces pollen",
+    "reply": "something that produces pollen[[276, 279, 568, 692]]",
+    "is_sentence": false,
+    "box": [
+      220.8,
+      148.70700000000002,
+      454.4,
+      368.83599999999996
+    ],
+    "scale": "0-1000",
+    "raw": [
+      276.0,
+      279.0,
+      568.0,
+      692.0
+    ]
+  },
+  "5198986343_87f908bf9a_o": {
+    "query": "When using a film camera to take photos, what part of the camera helps focus the light on the film to capture the image?",
+    "reply": "When using a film camera to take photos, what part of the camera helps focus the light on the film to capture the image?[[162, 104, 921, 888]]",
+    "is_sentence": true,
+    "box": [
+      259.2,
+      110.96799999999999,
+      1473.6000000000001,
+      947.496
+    ],
+    "scale": "0-1000",
+    "raw": [
+      162.0,
+      104.0,
+      921.0,
+      888.0
+    ]
+  },
+  "5235162538_6a603c4c38_o": {
+    "query": "the object that reaches the sky",
+    "reply": "the object that reaches the sky[[0, 326, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      688.5120000000001,
+      2816.0,
+      2112.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      326.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "5247939212_ca5c8a4379_o": {
+    "query": "Sometimes, when a car is parked on the side of the road, the driver may accidentally leave the car door open. What part in the picture can indicate that the car door is open?",
+    "reply": "Sometimes, when a car is parked on the side of the road, the driver may accidentally leave the car door open. What part in the picture can indicate that the car door is open[[0, 180, 1000, 710]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      466.56,
+      1936.0,
+      1840.32
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      180.0,
+      1000.0,
+      710.0
+    ]
+  },
+  "525267713_fcfcbd67f5_o": {
+    "query": "In a busy and bustling city, it is important for businesses to have eye-catching signs to attract customers. What feature in the picture can serve this purpose?",
+    "reply": "In a busy and bustling city, it is important for businesses to have eye-catching signs to attract customers. What feature in the picture can serve this purpose?\u201c",
+    "is_sentence": true,
+    "box": null,
+    "reason": "unparseable"
+  },
+  "53077974_73902e5a65_o": {
+    "query": "In some regions, people raise certain animals for their milk, meat, and skin. What animal in the picture could be domesticated for such purposes?",
+    "reply": "In some regions, people raise certain animals for their milk, meat, and skin. What animal in the picture could be domesticated for such purposes?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2048.0,
+      1365.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "5341048_99ce1e3559_o": {
+    "query": "the objects that can protect the snail and prevent it from getting injured",
+    "reply": "the objects that can protect the snail and prevent it from getting injured[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1800.0,
+      1350.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "536167533_22228a08df_o": {
+    "query": "In a graduation ceremony, it is a tradition for the graduates to wear a specific type of clothing to signify their achievement. What item of clothing can be seen in the picture that is commonly worn by graduates?",
+    "reply": "In a graduation ceremony, it is a tradition for the graduates to wear a specific type of clothing to signify their achievement. What item of clothing can be seen in the picture that is commonly worn by graduates?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2304.0,
+      3456.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "538910735_f68e529d35_o": {
+    "query": "In an educational setting, children often use different materials to learn about letters, numbers, and words. What object in the picture could be used as a visual aid for learning about letters and words?",
+    "reply": "keyboard[[12, 243, 298, 701]]",
+    "is_sentence": true,
+    "box": [
+      24.576,
+      309.582,
+      610.304,
+      893.074
+    ],
+    "scale": "0-1000",
+    "raw": [
+      12.0,
+      243.0,
+      298.0,
+      701.0
+    ]
+  },
+  "54003842_717370b14b_o": {
+    "query": "the place where the child is about to slip/fall off",
+    "reply": "the place where the child is about to slip/fall off[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1704.0,
+      2152.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "540048064_3974a75570_o": {
+    "query": "In a dark cave, there is no natural light source. What object in the picture can be used to provide light to navigate and explore the cave?",
+    "reply": "In a dark cave, there is no natural light source. What object in the picture can be used to provide light to navigate and explore the cave?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      640.0,
+      480.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "545104824_da18cfd88c_o": {
+    "query": "In a motorcycle race, there are often sharp turns that require skilled maneuvering. What part of the race track in the picture indicates a sharp turn?",
+    "reply": "In a motorcycle race, there are often sharp turns that require skilled maneuvering. What part of the race track in the picture indicates a sharp turn?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1023.0,
+      682.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "5620115042_2a6e23e3a0_o": {
+    "query": "Dogs are faithful companions to humans, and humans often play fetch games with them. What object will the dog likely retrieve and bring back to the human for the next round of fetch in the picture?",
+    "reply": "Dogs are faithful companions to humans, and humans often play fetch games with them. What object will the dog likely retrieve and bring back to the human for the next round of fetch in the picture[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      3003.0,
+      1816.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "56528009_0999f9f919_o": {
+    "query": "a car with a color that is closer to lipstick color",
+    "reply": "a car with a color that is closer to lipstick color[[0, 342, 811, 865]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      410.40000000000003,
+      1297.6000000000001,
+      1038.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      342.0,
+      811.0,
+      865.0
+    ]
+  },
+  "57209642_98c79b8ee2_o": {
+    "query": "In a large building, it is common to have designated areas for swimming. What area in the picture could be used for swimming?",
+    "reply": "In a large building, it is common to have designated areas for swimming. What area in the picture could be used for swimming?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2272.0,
+      1704.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "58602728_87be62e877_o": {
+    "query": "something that we use to control computer games",
+    "reply": "something that we use to control computer games[[270, 77, 651, 975]]",
+    "is_sentence": false,
+    "box": [
+      216.0,
+      46.2,
+      520.8000000000001,
+      585.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      270.0,
+      77.0,
+      651.0,
+      975.0
+    ]
+  },
+  "5997856658_6b3da6b07b_o": {
+    "query": "the sewage outlet",
+    "reply": "the sewage outlet[[272, 202, 662, 338]]",
+    "is_sentence": false,
+    "box": [
+      822.528,
+      814.464,
+      2001.8880000000001,
+      1362.816
+    ],
+    "scale": "0-1000",
+    "raw": [
+      272.0,
+      202.0,
+      662.0,
+      338.0
+    ]
+  },
+  "6044508413_7140f9203d_o": {
+    "query": "the reflection of the object",
+    "reply": "the reflection of the object[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      3760.0,
+      2820.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "6069410_2ec241213c_o": {
+    "query": "In an organized workspace, one might have a designated area to store important documents and files. What piece of furniture in the picture could be used for this purpose?",
+    "reply": "in an organized workspace, one might have a designated area to store important documents and files. What piece of furniture in the picture could be used for this purpose?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1000.0,
+      750.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "609761865_a6078603bb_o": {
+    "query": "the person in the air",
+    "reply": "the person in the air[[218, 211, 667, 420]]",
+    "is_sentence": false,
+    "box": [
+      468.264,
+      640.174,
+      1432.7160000000001,
+      1274.28
+    ],
+    "scale": "0-1000",
+    "raw": [
+      218.0,
+      211.0,
+      667.0,
+      420.0
+    ]
+  },
+  "618468390_7ba5422749_o": {
+    "query": "When participating in water activities such as kayaking, it is important to ensure personal safety. What item in the picture is designed to provide buoyancy and keep the person afloat in case of an accident?",
+    "reply": "When participating in water activities such as kayaking, it is important to ensure personal safety. What item in the picture is designed to provide buoyancy and keep the person afloat in case of an accident?[[344, 281, 592, 645]]",
+    "is_sentence": true,
+    "box": [
+      454.768,
+      291.39700000000005,
+      782.6239999999999,
+      668.865
+    ],
+    "scale": "0-1000",
+    "raw": [
+      344.0,
+      281.0,
+      592.0,
+      645.0
+    ]
+  },
+  "65421733_680adf9100_o": {
+    "query": "the slogan for welcoming",
+    "reply": "the slogan for welcoming[[220, 2, 1000, 283]]",
+    "is_sentence": false,
+    "box": [
+      352.0,
+      2.4,
+      1600.0,
+      339.59999999999997
+    ],
+    "scale": "0-1000",
+    "raw": [
+      220.0,
+      2.0,
+      1000.0,
+      283.0
+    ]
+  },
+  "692198_ac99d18ac5_o": {
+    "query": "Dogs often like to find a comfortable place to rest. What object in the picture can offer a soft and comfortable surface for the dog to lie on?",
+    "reply": "Dogs often like to find a comfortable place to rest. What object in the picture can offer a soft and comfortable surface for the dog to lie on?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      400.0,
+      299.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "6985022494_9323c1a1e0_o": {
+    "query": "the food that makes people feel spicy or hot",
+    "reply": "the food that makes people feel spicy or hot[[99, 298, 336, 733]]",
+    "is_sentence": false,
+    "box": [
+      101.376,
+      202.34199999999998,
+      344.064,
+      497.707
+    ],
+    "scale": "0-1000",
+    "raw": [
+      99.0,
+      298.0,
+      336.0,
+      733.0
+    ]
+  },
+  "71843031_6b48b57db4_o": {
+    "query": "the place where the dishes and meals should be put for eating",
+    "reply": "the place where the dishes and meals should be put for eating[[120, 190, 492, 888]]",
+    "is_sentence": false,
+    "box": [
+      96.0,
+      114.19,
+      393.6,
+      533.688
+    ],
+    "scale": "0-1000",
+    "raw": [
+      120.0,
+      190.0,
+      492.0,
+      888.0
+    ]
+  },
+  "750173696_2727ac49bf_o": {
+    "query": "the part of the persons that is above the water",
+    "reply": "the part of the persons that is above the water[[444, 135, 1000, 485]]",
+    "is_sentence": false,
+    "box": [
+      1363.968,
+      311.04,
+      3072.0,
+      1117.44
+    ],
+    "scale": "0-1000",
+    "raw": [
+      444.0,
+      135.0,
+      1000.0,
+      485.0
+    ]
+  },
+  "7573264258_ec91a14d84_o": {
+    "query": "In the picture, there is a legal requirement for vehicles to display identifying information. What part of the car is used to display this information?",
+    "reply": "In the picture, there is a legal requirement for vehicles to display identifying information. What part of the car is used to display this information?[[0, 202, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      557.9240000000001,
+      3948.0,
+      2762.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      202.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "764271537_cf309cdeaf_o": {
+    "query": "Sometimes, water leaks from faulty plumbing or faucets. What part of the plumbing system in the picture can be a potential source of the water leak?",
+    "reply": "Sometimes, water leaks from faulty plumbing or faucets. What part of the plumbing system in the picture can be a potential source of the water leak?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2592.0,
+      3872.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7657751362_9b18293c1c_o": {
+    "query": "the dog that puts its tongue out",
+    "reply": "the dog that puts its tongue out[[290, 40, 775, 462]]",
+    "is_sentence": false,
+    "box": [
+      348.0,
+      64.0,
+      930.0,
+      739.2
+    ],
+    "scale": "0-1000",
+    "raw": [
+      290.0,
+      40.0,
+      775.0,
+      462.0
+    ]
+  },
+  "7667955824_23f01c253a_o": {
+    "query": "Insects have various ways to protect themselves from predators. What characteristics can a moth use to deter potential threats?",
+    "reply": "Insects have various ways to protect themselves from predators. What characteristics can a moth use to deter potential threats?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2592.0,
+      3872.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7670408300_3b3c809aa8_o": {
+    "query": "the car that may need repair",
+    "reply": "the car that may need repair[[10, 274, 576, 724]]",
+    "is_sentence": false,
+    "box": [
+      21.76,
+      447.168,
+      1253.376,
+      1181.568
+    ],
+    "scale": "0-1000",
+    "raw": [
+      10.0,
+      274.0,
+      576.0,
+      724.0
+    ]
+  },
+  "7676818244_d1a537f909_o": {
+    "query": "Many people use bags to carry their belongings when they go out. What part of the bag in the picture can be used to carry the bag comfortably over the shoulder?",
+    "reply": "Many people use bags to carry their belongings when they go out. What part of the bag in the picture can be used to carry the bag comfortably over the shoulder?[[0, 0, 1000, 987]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2560.0,
+      1895.04
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      987.0
+    ]
+  },
+  "770949602_6dc3103abc_o": {
+    "query": "something indicating the identity of the bus",
+    "reply": "something indicating the identity of the bus[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1536.0,
+      2048.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7714600130_38381cc570_o": {
+    "query": "Horses can be trained to follow commands and be controlled while being ridden. What object in the picture is used for controlling and guiding a horse?",
+    "reply": "Horses can be trained to follow commands and be controlled while being ridden. What object in the picture is used for controlling and guiding a horse?[[0, 234, 202, 521]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      239.616,
+      155.13600000000002,
+      533.504
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      234.0,
+      202.0,
+      521.0
+    ]
+  },
+  "7763315544_dd5d321d1d_o": {
+    "query": "the shadow of the red car",
+    "reply": "the shadow of the red car[[184, 398, 1000, 787]]",
+    "is_sentence": false,
+    "box": [
+      671.232,
+      1088.928,
+      3648.0,
+      2153.232
+    ],
+    "scale": "0-1000",
+    "raw": [
+      184.0,
+      398.0,
+      1000.0,
+      787.0
+    ]
+  },
+  "7765654688_88f0f7d2dc_o": {
+    "query": "Some birds have long bills that they use to catch food from the water. What part of the bird's body in the picture may have this characteristic?",
+    "reply": "Some birds have long bills that they use to catch food from the water. What part of the bird's body in the picture may have this characteristic?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1200.0,
+      800.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7791897090_3d75b48354_o": {
+    "query": "When plants grow excessively in unwanted areas, it is necessary to remove them to maintain the aesthetics of the surroundings. What part of the plants in the picture may need to be removed in this situation?",
+    "reply": "When plants grow excessively in unwanted areas, it is necessary to remove them to maintain the aesthetics of the surroundings. What part of the plants in the picture may need to be removed in this situation?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1280.0,
+      853.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7840008076_aeb59d4fa4_o": {
+    "query": "When eating scrambled eggs for breakfast, people often add a side dish made of potatoes. What item in the picture can be used to serve the potatoes?",
+    "reply": "When eating scrambled eggs for breakfast, people often add a side dish made of potatoes. What item in the picture can be used to serve the potatoes?[[0, 60, 1000, 477]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      60.0,
+      667.0,
+      477.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      60.0,
+      1000.0,
+      477.0
+    ]
+  },
+  "7858978442_544509060e_o": {
+    "query": "At a car show, visitors can get close to the displayed vehicles to admire their design and features. What part of the car in this picture is open, allowing viewers to see the engine compartment?",
+    "reply": "At a car show, visitors can get close to the displayed vehicles to admire their design and features. What part of the car in this picture is open, allowing viewers to see the engine compartment?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      3141.0,
+      2356.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7869247338_4192045bda_o": {
+    "query": "To keep bread fresh and protected, it is often placed in a protective covering. What item in the picture is commonly used for this purpose?",
+    "reply": "To keep bread fresh and protected, it is often placed in a protective covering. What item in the picture is commonly used for this purpose?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      612.0,
+      612.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7872473112_5c62c847fd_o": {
+    "query": "If we wanted to identify the specific vehicle shown in the picture, what part of the car should we look at?",
+    "reply": "If we wanted to identify the specific vehicle shown in the picture, what part of the car should we look at[[141, 222, 863, 883]]",
+    "is_sentence": true,
+    "box": [
+      169.2,
+      177.6,
+      1035.6,
+      706.4
+    ],
+    "scale": "0-1000",
+    "raw": [
+      141.0,
+      222.0,
+      863.0,
+      883.0
+    ]
+  },
+  "788171893_8afe53724b_o": {
+    "query": "Bamboo is very hard, and its sharp edges can easily scratch people. What tool in the picture can I use to split the bamboo and cross this bamboo forest?",
+    "reply": "Bamboo[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1600.0,
+      1200.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7902711142_e3e2e9c57b_o": {
+    "query": "When purchasing meat from a grocery store, it is often stored and sold in a certain type of container. What object in the picture could be used for this purpose?",
+    "reply": "When purchasing meat from a grocery store, it is often stored and sold in a certain type of container. What object in the picture could be used for this purpose?[[0, 104, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      199.67999999999998,
+      2560.0,
+      1920.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      104.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7911031370_6a90894e53_o": {
+    "query": "the transportation vehicle that does not require electricity or gasoline",
+    "reply": "the transportation vehicle that does not require electricity or gasoline[[58, 525, 847, 901]]",
+    "is_sentence": false,
+    "box": [
+      300.672,
+      1814.4,
+      4390.848,
+      3113.856
+    ],
+    "scale": "0-1000",
+    "raw": [
+      58.0,
+      525.0,
+      847.0,
+      901.0
+    ]
+  },
+  "7923581794_9382d672f4_o": {
+    "query": "something showing that the man is playing sports",
+    "reply": "something showing that the man is playing sports[[0, 83, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      262.944,
+      4416.0,
+      3168.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      83.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7939894288_3028c8874a_o": {
+    "query": "Birds have various ways of searching for food. What part of their body helps them to grab and pick up food from the ground in the picture?",
+    "reply": "Birds have various ways of searching for food. What part of their body helps them to grab and pick up food from the ground in the picture?[[150, 462, 789, 690]]",
+    "is_sentence": true,
+    "box": [
+      334.34999999999997,
+      1187.3400000000001,
+      1758.681,
+      1773.3
+    ],
+    "scale": "0-1000",
+    "raw": [
+      150.0,
+      462.0,
+      789.0,
+      690.0
+    ]
+  },
+  "7956003436_0cd74be026_o": {
+    "query": "Insects can help pollinate flowers effectively, but some insects also collect pollen and nectar to produce honey. What in the picture does not make honey?",
+    "reply": "Insects can help pollinate flowers effectively, but some insects also collect pollen and nectar to produce honey. What in the picture does not make honey?[[353, 67, 744, 247]]",
+    "is_sentence": true,
+    "box": [
+      176.5,
+      43.617000000000004,
+      372.0,
+      160.797
+    ],
+    "scale": "0-1000",
+    "raw": [
+      353.0,
+      67.0,
+      744.0,
+      247.0
+    ]
+  },
+  "7968876916_1e511def7c_o": {
+    "query": "When people want to take their pets to the park and enjoy some outdoor activities, they often want to make sure their pets are safe and cannot run away. What in the picture could help with this?",
+    "reply": "woman[[519, 195, 848, 831]]",
+    "is_sentence": true,
+    "box": [
+      1696.611,
+      527.475,
+      2772.112,
+      2247.855
+    ],
+    "scale": "0-1000",
+    "raw": [
+      519.0,
+      195.0,
+      848.0,
+      831.0
+    ]
+  },
+  "7978234396_c20285d9e4_o": {
+    "query": "When admiring a beautiful sunset, what part of the picture would we most likely focus on?",
+    "reply": "When admiring a beautiful sunset, what part of the picture would we most likely focus on?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      3494.0,
+      1542.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7982918097_b262e0885b_o": {
+    "query": "When taking pictures with a camera, what part of the camera is responsible for focusing the image and adjusting the depth of field?",
+    "reply": "When taking pictures with a camera, what part of the camera is responsible for focusing the image and adjusting the depth of field?[[0, 123, 1000, 964]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      204.672,
+      2048.0,
+      1604.096
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      123.0,
+      1000.0,
+      964.0
+    ]
+  },
+  "7986418627_b219f73809_o": {
+    "query": "In a television studio, various equipment is used to capture and record video footage. What in the picture could be used to stabilize and hold the camera steady during filming?",
+    "reply": "In a television studio, various equipment is used to capture and record video footage. What in the picture could be used to stabilize and hold the camera steady during filming?[[0, 591, 142, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      1520.643,
+      510.20599999999996,
+      2573.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      591.0,
+      142.0,
+      1000.0
+    ]
+  },
+  "7990052567_b049b9c90e_o": {
+    "query": "A bride and groom often walk together down the aisle during a wedding ceremony. What object in the picture is the bride most likely holding during this moment?",
+    "reply": "A bride and groom often walk together down the aisle during a wedding ceremony. What object in the picture is the bride most likely holding during this moment?[[674, 281, 916, 908]]",
+    "is_sentence": true,
+    "box": [
+      606.6,
+      337.20000000000005,
+      824.4,
+      1089.6000000000001
+    ],
+    "scale": "0-1000",
+    "raw": [
+      674.0,
+      281.0,
+      916.0,
+      908.0
+    ]
+  },
+  "7996645458_f4986f74b9_o": {
+    "query": "This rocky terrain can be challenging to navigate. What object in the picture could provide information to guide travelers through this area?",
+    "reply": "This rocky terrain can be challenging to navigate. What object in the picture could provide information to guide travelers through this area?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      3888.0,
+      2592.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "7998502688_e1b379864c_o": {
+    "query": "In urban areas, there are designated areas for bicycles to ride safely. What area in the picture would a cyclist use to navigate through the city?",
+    "reply": "In urban areas, there are designated areas for bicycles to ride safely. What area in the picture would a cyclist use to navigate through the city?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      3072.0,
+      2304.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8012904007_3faa1f7795_o": {
+    "query": "In order to shape and carve hard materials, such as wood or stone, what part of the tool in the picture would be used to provide precise control and force?",
+    "reply": "In order to shape and carve hard materials, such as wood or stone, what part of the tool in the picture would be used to provide precise control and force?[[13, 0, 969, 966]]",
+    "is_sentence": true,
+    "box": [
+      11.908,
+      0.0,
+      887.6039999999999,
+      763.14
+    ],
+    "scale": "0-1000",
+    "raw": [
+      13.0,
+      0.0,
+      969.0,
+      966.0
+    ]
+  },
+  "8022090426_c607a72875_o": {
+    "query": "For the safety of newborns, they are often placed in a secure and comfortable space when they sleep. What furniture in the picture is commonly used to provide a safe sleeping environment for babies?",
+    "reply": "For the safety of newborns, they are often placed in a secure and comfortable space when they sleep. What furniture in the picture is commonly used to provide a safe sleeping environment for babies?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1455.0,
+      1002.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8039953648_d5551bee4a_o": {
+    "query": "the container that contains the vegetable",
+    "reply": "the container that contains the vegetable[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      2352.0,
+      1568.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8041642039_5160b5ca28_o": {
+    "query": "Dogs use their mouths to perform various tasks, including eating and vocalizing. What part of the dog's body is primarily responsible for these actions?",
+    "reply": "Dogs use their mouths to perform various tasks, including eating and vocalizing. What part of the dog's body is primarily responsible for these actions[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      4928.0,
+      3264.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8059404222_1fa849e2c1_o": {
+    "query": "In some cultures, people use sculptures and figurines to represent various aspects of life, including celebrations, rituals, and art. What object in the picture can be considered a representation of a human figure?",
+    "reply": "sculpture[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      4309.0,
+      2868.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "806877307_f4a8cdb548_o": {
+    "query": "something that protects the persons' heads",
+    "reply": "something that protects the persons' heads[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      2048.0,
+      1360.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8087061900_51c823704a_o": {
+    "query": "Birds often need a place to rest or observe their surroundings. What part of a tree in the picture offers a suitable spot for birds to do so?",
+    "reply": "Birds often need a place to rest or observe their surroundings. What part of a tree in the picture offers a suitable spot for birds to do so?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      612.0,
+      612.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8102740271_c9e28f2925_o": {
+    "query": "In a concert or public speaking event, what object in the picture would be used by the speaker or performer to amplify their voice?",
+    "reply": "In a concert or public speaking event, what object in the picture would be used by the speaker or performer to amplify their voice?[[0, 119, 474, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      57.358,
+      341.28,
+      482.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      119.0,
+      474.0,
+      1000.0
+    ]
+  },
+  "8131485383_f3180e425a_o": {
+    "query": "If a person wanted to charge their electric car while parked in the street, what object in the picture could they use to connect the car to an electrical power source?",
+    "reply": "if a person wanted to charge their electric car while parked in the street, what object in the picture could they use to connect the car to an electrical power source[[0, 158, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      318.528,
+      3032.0,
+      2016.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      158.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8146167224_6cfac8b502_o": {
+    "query": "knobs without screws in the center",
+    "reply": "knobs without screws in the center[[200, 289, 406, 429]]",
+    "is_sentence": false,
+    "box": [
+      92.2,
+      177.73499999999999,
+      187.16600000000003,
+      263.835
+    ],
+    "scale": "0-1000",
+    "raw": [
+      200.0,
+      289.0,
+      406.0,
+      429.0
+    ]
+  },
+  "8313112_9c173bb68d_o": {
+    "query": "something that prevents people from getting into the building",
+    "reply": "something that prevents people from getting into the building[[0, 795, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      477.0,
+      800.0,
+      600.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      795.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8325957386_d93b997e0b_o": {
+    "query": "In the picture, there seems to be a symbiotic relationship between two species, where one provides protection for the other. What animal in the picture is known to seek refuge in the tentacles of another creature for safety?",
+    "reply": "In the picture, there seems to be a symbiotic relationship between two species, where one provides protection for the other. What animal in the picture is known to seek refuge in the tentacles of another creature for safety?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      3648.0,
+      2736.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "83337832_e2c43ff934_o": {
+    "query": "What object in the picture should be used with water to create foam and effectively remove oil and dirt when your hands are very dirty?",
+    "reply": "What object in the picture should be used with water to create foam and effectively remove oil and dirt when your hands are very dirty?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      2272.0,
+      1704.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "84030049_7f9f352f89_o": {
+    "query": "the person who is shooting a free throw",
+    "reply": "the person who is shooting a free throw[[255, 54, 620, 1000]]",
+    "is_sentence": false,
+    "box": [
+      466.90500000000003,
+      123.498,
+      1135.22,
+      2287.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      255.0,
+      54.0,
+      620.0,
+      1000.0
+    ]
+  },
+  "8451614203_e6484a2cb4_o": {
+    "query": "the places where the driver can observe the speed",
+    "reply": "the places where the driver can observe the speed[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1417.0,
+      944.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8500602404_47e192f15c_o": {
+    "query": "something that is noticeably different from the other plants in the picture",
+    "reply": "something that is noticeably different from the other plants in the picture[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      5184.0,
+      3456.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "85090713_b8f9ab3cc1_o": {
+    "query": "When a photographer wants to adjust the focus of a camera lens, what part in the picture could they manipulate to achieve this?",
+    "reply": "When a photographer wants to adjust the focus of a camera lens, what part in the picture could they manipulate to achieve this?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1600.0,
+      1584.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "8510984_da5573f3eb_o": {
+    "query": "something showing that they are skating",
+    "reply": "something showing that they are skating[[272, 566, 619, 984]]",
+    "is_sentence": false,
+    "box": [
+      118.32000000000001,
+      328.28,
+      269.265,
+      570.72
+    ],
+    "scale": "0-1000",
+    "raw": [
+      272.0,
+      566.0,
+      619.0,
+      984.0
+    ]
+  },
+  "8538709738_64b8258e6f_o": {
+    "query": "When serving wine, it is common to pour it into a glass from a container. What object in the picture could be used to pour wine?",
+    "reply": "bottle[[485, 0, 1000, 555]]",
+    "is_sentence": true,
+    "box": [
+      319.13,
+      0.0,
+      658.0,
+      205.35000000000002
+    ],
+    "scale": "0-1000",
+    "raw": [
+      485.0,
+      0.0,
+      1000.0,
+      555.0
+    ]
+  },
+  "862728645_7aacaa218d_o": {
+    "query": "the stacked cookies",
+    "reply": "the stacked cookies[[252, 390, 659, 735]]",
+    "is_sentence": false,
+    "box": [
+      529.704,
+      546.78,
+      1385.218,
+      1030.47
+    ],
+    "scale": "0-1000",
+    "raw": [
+      252.0,
+      390.0,
+      659.0,
+      735.0
+    ]
+  },
+  "8842422277_48d22fdbd4_o": {
+    "query": "When constructing a house, what part of the building process involves assembling a sturdy base and framework?",
+    "reply": "When constructing a house, what part of the building process involves assembling a sturdy base and framework?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      1600.0,
+      1200.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "889861234_40005de024_o": {
+    "query": "People often add gas to water to improve its taste. What part of the picture will be consumed as a beverage?",
+    "reply": "People often add gas to water to improve its taste. What part of the picture will be consumed as a beverage?[[0, 292, 190, 903]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      680.6519999999999,
+      332.31,
+      2104.893
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      292.0,
+      190.0,
+      903.0
+    ]
+  },
+  "914980029_4a7c8f579e_o": {
+    "query": "something that can control the fan speed",
+    "reply": "something that can control the fan speed[[762, 375, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      2633.472,
+      864.0,
+      3456.0,
+      2304.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      762.0,
+      375.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "9263255964_46c5a14a8e_o": {
+    "query": "where to wash hands",
+    "reply": "where to wash hands[[185, 622, 480, 879]]",
+    "is_sentence": false,
+    "box": [
+      886.705,
+      3702.766,
+      2300.64,
+      5232.687
+    ],
+    "scale": "0-1000",
+    "raw": [
+      185.0,
+      622.0,
+      480.0,
+      879.0
+    ]
+  },
+  "9349045992_d06f09cc8e_o": {
+    "query": "In order to facilitate transportation and connect different regions, what structure in the picture was built across the water?",
+    "reply": "In order to facilitate transportation and connect different regions, what structure in the picture was built across the water?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      4928.0,
+      3264.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "94339905_0a6edc71cb_o": {
+    "query": "the reflection of the camera in the mirror",
+    "reply": "the reflection of the camera in the mirror[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      1920.0,
+      2880.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "970954629_b1db0e79c8_o": {
+    "query": "something used by a Jedi warrior to attack enemies",
+    "reply": "something used by a Jedi warrior to attack enemies[[0, 294, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      211.67999999999998,
+      502.0,
+      720.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      294.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "9764725444_4f1be5b750_o": {
+    "query": "the ship that is most likely to carry a fleet commander",
+    "reply": "the ship that is most likely to carry a fleet commander[[211, 216, 672, 673]]",
+    "is_sentence": false,
+    "box": [
+      688.704,
+      528.768,
+      2193.4080000000004,
+      1647.5040000000001
+    ],
+    "scale": "0-1000",
+    "raw": [
+      211.0,
+      216.0,
+      672.0,
+      673.0
+    ]
+  },
+  "9983179_38a750cbef_o": {
+    "query": "something hot and light",
+    "reply": "something hot and light[[0, 0, 1000, 1000]]",
+    "is_sentence": false,
+    "box": [
+      0.0,
+      0.0,
+      816.0,
+      616.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0000_00_3000": {
+    "query": "In the living room, people often sit on the sofa to watch TV or chat. What object can they use to adjust the TV screen or change channels?",
+    "reply": "In the living room, people often sit on the sofa to watch TV or chat. What object can they use to adjust the TV screen or change channels?[[0, 715, 404, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      171.6,
+      129.28,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      715.0,
+      404.0,
+      1000.0
+    ]
+  },
+  "scene0026_00_0": {
+    "query": "What object is used to cover the entrance of the bathroom and ensure privacy?",
+    "reply": "What object is used to cover the entrance of the bathroom and ensure privacy?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0067_01_0": {
+    "query": "What structure can be used to drain the water from the bathroom floor and prevent the accumulation of wastewater?",
+    "reply": "What structure can be used to drain the water from the bathroom floor and prevent the accumulation of wastewater?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0104_00_0": {
+    "query": "When we need to access or store things above our reach, what would be helpful to stand on?",
+    "reply": "When we need to access or store things above our reach, what would be helpful to stand on?[[286, 272, 608, 1000]]",
+    "is_sentence": true,
+    "box": [
+      91.52,
+      65.28,
+      194.56,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      286.0,
+      272.0,
+      608.0,
+      1000.0
+    ]
+  },
+  "scene0234_00_0": {
+    "query": "What container in the picture is used for arranging the flowers to make them look more beautiful?",
+    "reply": "What container in the picture is used for arranging the flowers to make them look more beautiful?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0241_02_0": {
+    "query": "The office is a place where people focus on their work. What structure in the room can help block noise and reduces Interruptions from the outside environment?",
+    "reply": "The office is a place where people focus on their work. What structure in the room can help block noise and reduces Interruptions from the outside environment?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0295_00_0": {
+    "query": "When the weather is very cold outside, what equipment do we need to use to increase the indoor temperature in the room?",
+    "reply": "When the weather is very cold outside, what equipment do we need to use to increase the indoor temperature in the room?[[185, 187, 664, 874]]",
+    "is_sentence": true,
+    "box": [
+      59.2,
+      44.88,
+      212.48000000000002,
+      209.76
+    ],
+    "scale": "0-1000",
+    "raw": [
+      185.0,
+      187.0,
+      664.0,
+      874.0
+    ]
+  },
+  "scene0368_00_0": {
+    "query": "What structure separates two areas in the room and is commonly used to hold onto for support when going up and down?",
+    "reply": "What structure separates two areas in the room and is commonly used to hold onto for support when going up and down?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0395_02_0": {
+    "query": "If a person wants to watch TV or a movie, which furniture is the most suitable for them to sit and watch?",
+    "reply": "If a person wants to watch TV or a movie, which furniture is the most suitable for them to sit and watch[[453, 364, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      144.96,
+      87.36,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      453.0,
+      364.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0497_00_0": {
+    "query": "After cooking, consuming food, and preparing for food, where can we throw away the rest of the food and scraps?",
+    "reply": "After cooking, consuming food, and preparing for food, where can we throw away the rest of the food and scraps?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0570_02_0": {
+    "query": "Where do people put their dirty hygiene products to keep the bathroom clean?",
+    "reply": "Where do people put their dirty hygiene products to keep the bathroom clean?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0636_00_0": {
+    "query": "What musical instrument in the picture is usually played with both hands on a keyboard?",
+    "reply": "What musical instrument in the picture is usually played with both hands on a keyboard?[[0, 0, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      0.0,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      0.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0647_00_0": {
+    "query": "If you want to play table tennis indoors, what furniture in the picture should be used as the playing surface?",
+    "reply": "If you want to play table tennis indoors, what furniture in the picture should be used as the playing surface[[797, 678, 1000, 1000]]",
+    "is_sentence": true,
+    "box": [
+      255.04000000000002,
+      162.72,
+      320.0,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      797.0,
+      678.0,
+      1000.0,
+      1000.0
+    ]
+  },
+  "scene0673_05_3000": {
+    "query": "What object in a typical modern kitchen can be used to quickly heat up leftovers, boil water, or cook frozen food?",
+    "reply": "microwave[[131, 218, 519, 503]]",
+    "is_sentence": true,
+    "box": [
+      41.92,
+      52.32,
+      166.08,
+      120.72
+    ],
+    "scale": "0-1000",
+    "raw": [
+      131.0,
+      218.0,
+      519.0,
+      503.0
+    ]
+  },
+  "scene0684_00_0": {
+    "query": "During the move, what object can be used to store and transport various sundries and small household items, which is sturdy and relatively easy to carry?",
+    "reply": "During the move, what object can be used to store and transport various sundries and small household items, which is sturdy and relatively easy to carry?[[0, 467, 436, 1000]]",
+    "is_sentence": true,
+    "box": [
+      0.0,
+      112.08000000000001,
+      139.52,
+      240.0
+    ],
+    "scale": "0-1000",
+    "raw": [
+      0.0,
+      467.0,
+      436.0,
+      1000.0
+    ]
+  }
+}
