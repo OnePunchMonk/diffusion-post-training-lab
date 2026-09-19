@@ -323,11 +323,29 @@ Cost tags: **(free)** runs on the M5 Pro · **(cheap)** ≲1 GPU-hour ·
 
 ### Tier 1 — directly answers an open question in this repo
 
+- [ ] **[FourTune](https://hanlab.mit.edu/projects/fourtune)** — *Towards Fully
+      4-Bit Efficient Post-Training for Diffusion Models*
+      ([arXiv 2607.05711](https://arxiv.org/abs/2607.05711), 2026; Xue, Min,
+      Li, Zhang, Xi, Zhang, Agrawala, Zhu, Han, Lin, Li — MIT / CMU / Stanford
+      / Berkeley, the SVDQuant group).
+      End-to-end **W4A4G4**: weights, activations *and gradients* in 4 bits.
+      A triple-branch pipeline augments LoRA with a **frozen numerical
+      stabilizer** for quantization-sensitive outliers, plus block-wise
+      quantization and fused kernels for quantized backprop.
+      **2.25× less memory and 2.27× more training throughput than BF16 LoRA**
+      on FLUX.1-dev 12B, at full-precision quality.
+      **Why this is the most relevant paper in the survey for us:** every other
+      quantization entry here is about *inference*. This one makes *training*
+      cheaper, which is the binding constraint on this repo — it would roughly
+      halve the cost of the 20-subject sweep and let it run on a smaller card.
+      It is also validated on exactly our three axes: customization, RL and
+      distillation. Code link exists on the project page but release is
+      unconfirmed — check before scoping. **(cheap to try, if the code is out)**
 - [ ] **[SVDQuant](https://arxiv.org/abs/2411.05007)** (ICLR 2025 Spotlight) —
       absorbs activation outliers into a high-precision **low-rank branch**,
       then quantizes the rest to 4 bits. 3.5× memory and 3.0× speedup on
       FLUX.1 12B on a 16GB 4090.
-      **Why it is top of the list:** it "seamlessly supports off-the-shelf
+      **Why it matters:** it "seamlessly supports off-the-shelf
       LoRAs without re-quantization" — the LoRA branch fuses into the low-rank
       branch by slightly raising the rank. That is a *direct answer* to the
       question in §13 and §3 about whether an FP16-trained adapter survives a
@@ -413,10 +431,11 @@ justify or change those choices.
 
 ### Reading order if time is short
 
-1. **SVDQuant** — it answers a question we have already written down twice
-2. **MIT lecture notes** §flow matching — grounds everything in Tier 3
-3. **SANA-Sprint** — the distillation reference point
-4. **Instance-aware discretizations** + **Curriculum Sampling** — the two
+1. **FourTune** — it makes training cheaper, which is the binding constraint
+2. **SVDQuant** — it answers a question we have already written down twice
+3. **MIT lecture notes** §flow matching — grounds everything in Tier 3
+4. **SANA-Sprint** — the distillation reference point
+5. **Instance-aware discretizations** + **Curriculum Sampling** — the two
    cheapest things here that produce a number
 
 ## 14. Housekeeping
