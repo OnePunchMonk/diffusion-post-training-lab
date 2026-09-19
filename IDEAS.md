@@ -77,9 +77,29 @@ on Apple Silicon — **free, locally, on the M5 Pro.**
 - [ ] **Rerun with dynamic tiling enabled and `max_new_tokens=256`.** Both
       confounds bite hardest on the population that scored worst, so the
       long/short gap is not yet established. Same ~$1
-- [ ] Try **LFM2-VL-450M** (Liquid AI) as a 4× smaller grounding stage. Note
-      Liquid AI has *no* image diffusion models — their one "Diffusion" entry
-      is a masked **text** diffusion encoder
+- [ ] **Swap the grounding stage for [LFM2.5-VL](https://huggingface.co/LiquidAI/LFM2.5-VL-450M)
+      (Liquid AI).** The strongest single follow-up to the cascade result, for
+      four reasons that all happen to line up:
+  - **It actually grounds.** Bounding-box prediction is a *new capability in
+    2.5* (LFM2-VL did not have it), and it scores **81.28 on RefCOCO-M**. Our
+    failure mode was InternVL2-2B returning the whole frame on 46% of samples;
+    a model with a real grounding number is the clean way to separate "cascades
+    can't reason" from "InternVL2-2B specifically won't localize"
+  - **Native tiling** — 512×512 non-overlapping patches plus a thumbnail for
+    global context. That removes the biggest confound in our run, where we
+    disabled InternVL2's dynamic tiling to keep costs down
+  - **Output is normalized [0, 1]** JSON:
+    `[{"label": ..., "bbox": [x1, y1, x2, y2]}]`. Our `parse_box` already
+    infers and handles that scale (`SCALE_UNIT`), so the parser needs no change
+    — though the JSON-array format does need a branch
+  - **MLX builds at 4/5/6/8-bit and bf16** → the grounding stage runs **free on
+    the M5 Pro**. No GPU spend at all **(free)**
+  - Sizes: 450M (4× smaller than InternVL2-2B), 1.6B, 3B — so it also gives a
+    scaling curve for free
+  - Licence is **LFM1.0**, not Apache. Worth reading before anything is
+    published on top of it
+- [ ] Note Liquid AI has *no* image diffusion models — their one "Diffusion"
+      entry is a masked **text** diffusion encoder (`LFM2.5-Encoder-350M-Diffusion`)
 - [ ] Try InternVL2-8B to separate "2B is too small" from "cascades can't do this"
 
 ## 5. AnchorSeg replication — `anchorseg-internvl2/`
