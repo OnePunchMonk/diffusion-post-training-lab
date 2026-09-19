@@ -1,8 +1,13 @@
 # Results — FLUX.2 [klein] PEFT sweep
 
+Produced by the scripts in this directory. Raw per-cell JSON is in
+[`results/`](results/); `results/sweep-subject-5.json` is the merged file.
+
+Run on 2026-09-19, Modal A100-40GB, one container per cell.
+
 ## Subject-5, 167 optimizer steps, 3 held-out prompts
 
-Sorted by DINO (subject fidelity). `sweep-subject-5.json` has the raw cells.
+Sorted by DINO (subject fidelity).
 
 | method | trainable params | CLIP-T | DINO | CLIP-I | ms/img |
 |---|---|---|---|---|---|
@@ -48,14 +53,30 @@ over. Treat the ordering as a hypothesis to test at ~20 subjects, not a result.
    installed) and silently downgrades. BOFT was benchmarked at a setting nobody
    chose.
 
+### Cost
+
+| stage | GPU | time |
+|---|---|---|
+| `prepare` (SynCD slice) | none | ~4 min |
+| `smoke_all` (10 steps × 6) | A100-40GB | ~5 min |
+| `sweep` (167 steps × 6, parallel) | A100-40GB × 6 | ~7 min wall |
+| `evaluate` (6 cells, parallel) | A100-40GB × 6 | ~3 min wall |
+
+Well under an hour of billed GPU time for the whole thing.
+
 ### Reproducing
 
 ```bash
-modal run --detach flux2-klein-peft/modal/sweep.py::prepare
-modal run --detach flux2-klein-peft/modal/sweep.py::smoke_all   # 10 steps x 6, cents
-modal run --detach flux2-klein-peft/modal/sweep.py::sweep
-modal run --detach flux2-klein-peft/modal/sweep.py::evaluate
+modal run --detach modal/sweep.py::prepare
+modal run --detach modal/sweep.py::smoke_all   # 10 steps x 6, cents — do this first
+modal run --detach modal/sweep.py::sweep
+modal run --detach modal/sweep.py::evaluate
 ```
 
-Training: ~6 min per cell on one A100-40GB, six cells in parallel. Whole sweep
-plus evals came to well under an hour of GPU time.
+`smoke_all` exists because the expensive failure mode is a full sweep that
+completes and scores like a broken method. It found two harness bugs on its
+first outing: six pipelines in one container OOM after three methods (each
+cell now gets its own container), and a 10-step smoke written to the real
+output path made the sweep skip LoRA as "already trained".
+
+Use `--detach`. A non-detached run dies when the local client disconnects.

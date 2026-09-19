@@ -78,13 +78,22 @@ python scripts/quantize_nvfp4.py --model exports/klein-oft-subject-0 \
     --out exports/klein-oft-subject-0-nvfp4 --eval-subject data/syncd-20/subject-0
 ```
 
+## Results
+
+**[`RESULTS.md`](RESULTS.md)** — six methods trained and evaluated on SynCD
+subject-5. LoRA leads both axes (CLIP-T 0.9648, DINO 0.5060); LoHa is the
+informative cell, near-top prompt following with the lowest subject fidelity.
+
+That is **one subject and three prompts** — a pipeline-validation run, not a
+benchmark. Three confounds are recorded beside the table, including that the
+cells ran 167 optimizer steps rather than the 500 the configs request.
+
 ## Status
 
-Harness complete, **no sweep has been run yet** — there are no results to
-report. The code is verified by CPU-only tests and by reading the diffusers /
-peft sources; the flow-matching step, adapter injection and merge paths have
-not been exercised against real weights. Step 3 above is the first thing to run
-on a GPU box.
+The klein training path is verified against real weights: rectified-flow
+objective, VAE batch-norm latents, packed tokens, adapter injection and the
+checkpoint round-trip all run. The merge-and-serve and quantization paths have
+still never been executed.
 
 Credits: [SynCD](https://huggingface.co/datasets/nupurkmr9/syncd) (ICCV 2025,
 MIT) · [DreamBench++](https://huggingface.co/papers/2406.16855) (ICLR 2025) ·
