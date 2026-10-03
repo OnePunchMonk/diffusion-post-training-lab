@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import dataclasses
 import json
+import math
 import random
 from dataclasses import dataclass
 from pathlib import Path
@@ -55,6 +56,20 @@ class TrainConfig:
         extra = {k: v for k, v in raw.items() if k not in known}
         base = {k: v for k, v in raw.items() if k in known}
         return cls(**base, extra=extra)
+
+
+def epochs_for_optimizer_steps(num_batches: int, gradient_accumulation_steps: int, max_train_steps: int) -> int:
+    """Number of epochs needed so the training loop sees `max_train_steps`
+    *optimizer* steps, not micro-batches.
+
+    `global_step` only advances on `accelerator.sync_gradients`, which fires
+    once per `gradient_accumulation_steps` micro-batches (and once more at
+    the end of every epoch, via accelerate's forced end-of-dataloader sync).
+    Dividing `max_train_steps` directly by `len(dataloader)` conflates the
+    two and under-counts epochs whenever accumulation > 1.
+    """
+    updates_per_epoch = math.ceil(num_batches / max(1, gradient_accumulation_steps))
+    return math.ceil(max_train_steps / max(1, updates_per_epoch))
 
 
 def set_seed(seed: int) -> None:
