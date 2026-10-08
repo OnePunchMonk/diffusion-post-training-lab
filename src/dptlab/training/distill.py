@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import copy
 import logging
-import math
 from pathlib import Path
 
 from dptlab.data.dataset import PromptOnlyDataset
@@ -23,6 +22,7 @@ from dptlab.training.common import (
     TrainConfig,
     add_lora_adapter,
     encode_conditioning,
+    epochs_for_optimizer_steps,
     load_frozen_pipe,
     save_lora_checkpoint,
     save_run_manifest,
@@ -78,7 +78,9 @@ def train_distill(config: TrainConfig) -> Path:
     student, optimizer, dataloader = accelerator.prepare(student, optimizer, dataloader)
 
     global_step = 0
-    max_epochs = math.ceil(config.max_train_steps / max(1, len(dataloader)))
+    max_epochs = epochs_for_optimizer_steps(
+        len(dataloader), config.gradient_accumulation_steps, config.max_train_steps
+    )
 
     for _epoch in range(max_epochs):
         for batch in dataloader:

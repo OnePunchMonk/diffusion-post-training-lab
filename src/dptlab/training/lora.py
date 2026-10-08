@@ -20,7 +20,6 @@ with existing checkpoints and the MODELS.md leaderboard.
 from __future__ import annotations
 
 import logging
-import math
 from pathlib import Path
 
 from dptlab.data.dataset import ImageCaptionDataset
@@ -28,6 +27,7 @@ from dptlab.models.registry import get_model_spec
 from dptlab.training.common import (
     TrainConfig,
     add_lora_adapter,
+    epochs_for_optimizer_steps,
     load_frozen_pipe,
     save_run_manifest,
     set_seed,
@@ -87,7 +87,9 @@ def train_lora(config: TrainConfig) -> Path:
     denoiser, optimizer, dataloader = accelerator.prepare(denoiser, optimizer, dataloader)
 
     global_step = 0
-    max_epochs = math.ceil(config.max_train_steps / max(1, len(dataloader)))
+    max_epochs = epochs_for_optimizer_steps(
+        len(dataloader), config.gradient_accumulation_steps, config.max_train_steps
+    )
 
     for _epoch in range(max_epochs):
         for batch in dataloader:
